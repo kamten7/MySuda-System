@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant 小程序 as 微信小程序
+    participant 拦截器 as JWT 拦截器
+    participant 业务层 as Controller/Service
+    participant ThreadLocal as BaseContext
+
+    小程序->>拦截器: POST /user/shoppingCart/add<br/>Header: {authentication: "JWT Token"}
+    拦截器->>拦截器: 从请求头获取 Token
+    拦截器->>拦截器: 解析 JWT，提取 userId
+    拦截器->>ThreadLocal: BaseContext.setCurrentId(userId)
+    拦截器->>业务层: 放行请求
+    业务层->>ThreadLocal: BaseContext.getCurrentId()
+    业务层-->>小程序: 返回业务数据

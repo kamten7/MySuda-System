@@ -1,0 +1,18 @@
+sequenceDiagram
+    participant 小程序 as 微信小程序
+    participant Tomcat as Tomcat 容器
+    participant 拦截器链 as 拦截器链
+    participant MVC as Spring MVC
+    participant Controller as UserController
+    
+    小程序->>Tomcat: POST /user/user/login<br/>{code: "xxx"}
+    Tomcat->>拦截器链: 请求进入
+    拦截器链->>拦截器链: 检查路径：/user/user/login
+    拦截器链->>拦截器链: 发现被 excludePathPatterns 排除
+    拦截器链->>MVC: 直接放行（不执行 JWT 校验）
+    MVC->>MVC: 路由匹配：找到 UserController.login()
+    MVC->>Controller: 执行 login 方法
+    Controller->>Controller: 调用微信 API 获取 openid
+    Controller->>Controller: 判断是否新用户
+    Controller->>Controller: 生成 JWT Token
+    Controller-->>小程序: 返回 {token, id, openid}

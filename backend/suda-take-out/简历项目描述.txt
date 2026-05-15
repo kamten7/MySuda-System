@@ -1,0 +1,124 @@
+================================================================================
+                        简历项目描述
+================================================================================
+
+【项目名称】
+基于 Spring Boot + Vue.js + 微信小程序的全链路外卖平台系统
+
+【项目描述
+速达外卖是一个采用前后端分离架构的完整外卖业务平台，包含商家后台管理端（Vue.js +
+TypeScript SPA）与 C 端用户小程序（Uni-app / 微信小程序）。项目覆盖了从用户浏览加购、
+地址管理、微信支付下单，到商家接单、订单流转、数据统计与报表导出的完整业务闭环。
+
+后端基于 Spring Boot 2.7 + JDK 17 构建，采用多模块 Maven 工程（common / pojo /
+server），使用 MyBatis + Druid 连接池 + MySQL 作为持久层方案。系统实现了 JWT 双通
+道认证（管理端/用户端独立密钥与拦截器），基于 ThreadLocal 的线程级用户上下文隔离，
+自定义 @AutoFill 注解配合 AspectJ 切面通过反射实现公共字段自动填充，消除样板代码。
+集成 Redis + Spring Cache 注解（@Cacheable / @CacheEvict）缓存菜品与套餐数据，解
+决高并发查询性能瓶颈。通过 JSR 356 WebSocket（@ServerEndpoint）实现新订单与催单消
+息的实时推送，使用 ConcurrentHashMap 管理在线会话。对接微信支付 V3 API 实现统一下
+单与支付回调验签，开发环境使用 Cpolar 内网穿透解决回调可达性问题。调用百度地图
+Geocoding 与路线规划 API 实现配送范围校验（>5km 拒绝下单）。使用 Spring @Scheduled
+编写定时任务自动处理超时未支付订单取消与长期在途订单状态流转。基于 Apache POI 动
+态生成运营数据 Excel 报表，前端通过 Axios responseType: blob 接收二进制流触发下载。
+
+前端商家管理端基于 Vue 2.6 + TypeScript + Element UI，采用 Vuex 模块化状态管理与
+Vue Router 导航守卫实现 Token 认证路由控制，路由懒加载配合 Webpack 代码分割优化首
+屏加载，集成 ECharts 实现营业额、用户增长、订单趋势、菜品销量 Top10 等多维度数据
+可视化，使用 vuex-persistedstate 实现状态持久化。
+
+
+【技术栈】
+后端:
+   Spring Boot 2.7.3
+   JDK 17
+   MyBatis 2.2.0
+   MySQL 8.0
+   Redis
+   Druid
+   JWT (jjwt)
+   WebSocket (JSR 356)
+   AspectJ
+   Spring Cache
+   Spring Scheduled
+   Knife4j (Swagger)
+   阿里云 OSS
+   微信支付 V3 API
+   百度地图 API
+   Apache POI
+   Fastjson
+   Lombok
+   Maven 多模块
+
+前端:  Vue 2.6 / TypeScript 4.9 / Vue CLI 5 + Webpack 5 / Element UI / Vuex /
+        Vue Router / Axios / ECharts 5 / Sass / js-cookie / NProgress
+
+客户端: Uni-app / 微信小程序
+
+
+【核心职责与技术难点】
+
+1. JWT 双通道认证与 ThreadLocal 上下文隔离
+   - 设计管理端（/admin/**）与用户端（/user/**）两套独立的 JWT 拦截器，使用不同
+     密钥签发与校验，实现双端认证隔离
+   - 拦截器解析 Token 后将用户 ID 注入 ThreadLocal（BaseContext），Service 层
+     通过静态方法无侵入获取当前操作人，请求结束自动清理，防止内存泄漏
+
+2. AOP + 反射实现公共字段自动填充
+   - 自定义 @AutoFill 注解标记 Mapper 方法，AspectJ 切面拦截后通过 MethodSignature
+     反射获取实体参数，根据 OperationType（INSERT/UPDATE）动态调用 setter 方法
+     注入 createTime、updateTime、createUser、updateUser
+   - 将字段填充逻辑从业务代码中完全解耦，减少大量重复样板代码
+
+3. Redis + Spring Cache 缓存策略
+   - 使用 @Cacheable 注解按分类 ID 缓存套餐与菜品列表
+   - 增删改操作通过 @CacheEvict 精确清除对应缓存分区，避免缓存穿透与脏数据
+   - 自定义 Redis 序列化配置为 Jackson2Json，解决默认 JDK 序列化的可读性问题
+
+4. WebSocket 实时推送
+   - 基于 JSR 356 标准 @ServerEndpoint 注解实现 WebSocket 服务端
+   - 静态 ConcurrentHashMap 管理多客户端会话，支持群发（来单提醒）与定向推送
+   - 前端建立 WebSocket 长连接监听服务端事件，触发界面弹窗提醒
+
+5. 微信支付 V3 API 集成
+   - 实现 JSAPI 统一下单 → 生成预支付参数 → 小程序调起支付 → 异步回调验签的
+     完整支付闭环
+   - 回调接口使用微信平台证书验证签名有效性，防止伪造支付通知
+   - 开发环境使用 Cpolar 内网穿透使微信服务器可回调至本地服务
+
+6. 定时任务处理订单状态流转
+   - @Scheduled(cron = "0 * * * * ?") 每分钟扫描超时未支付订单（>15分钟）自动取消
+   - @Scheduled(cron = "0 0 1 * * ?") 每日凌晨处理长期在途订单自动完成
+
+7. 复杂业务 SQL 编写与分页
+   - 订单多条件动态查询（状态/时间范围/手机号）使用 MyBatis XML 动态 SQL
+   - PageHelper 透明分页，不侵入业务逻辑
+   - 数据统计模块使用 GROUP BY + 聚合函数实现多维度报表查询
+
+8. Excel 报表导出（前后端协作）
+   - 后端 Apache POI 动态创建工作簿，查询数据库填充单元格，通过 HttpServletResponse
+     OutputStream 返回二进制流
+   - 前端 Axios 设置 responseType: blob 接收二进制数据，利用 Blob + URL.createObjectURL
+     构造下载链接触发浏览器下载
+
+9. 前端路由懒加载与导航守卫
+   - Vue Router 动态 import + Webpack chunkName 注释实现路由级代码分割
+   - beforeEach 全局前置守卫检查 Cookie Token，未认证跳转登录页，通过 meta.notNeedAuth
+     配置公开路由白名单
+
+10. 多维度数据可视化看板
+    - ECharts 渲染营业额折线图、用户增长柱状图、订单统计、菜品销量 Top10 排行榜
+    - 组件化拆分统计模块，日期选择器驱动数据动态刷新
+    - 工作台首页聚合当日核心指标（营业额、订单数、菜品总数、套餐总数）
+
+11. 配送范围校验
+    - 调用百度地图 Geocoding API 将用户收货地址转为经纬度
+    - 调用 Driving Direction API 计算商家到用户驾车距离
+    - 超出 5km 配置范围时抛出业务异常，前端提示用户"配送距离超出范围"
+
+12. 全局异常处理与统一响应
+    - @RestControllerAdvice 全局捕获业务异常与 SQL 异常
+    - SQL 唯一约束冲突自动解析字段名，返回友好中文提示（如"用户名已存在"）
+    - 统一响应体 Result<T> 封装 code/msg/data，规范前后端通信协议
+
+================================================================================

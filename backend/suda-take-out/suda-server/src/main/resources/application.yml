@@ -1,0 +1,75 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  datasource:
+    druid:
+      driver-class-name: ${suda.datasource.driver-class-name}
+      url: jdbc:mysql://${suda.datasource.host}:${suda.datasource.port}/${suda.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${suda.datasource.username}
+      password: ${suda.datasource.password}
+  redis:
+    host: ${suda.redis.host}
+    port: ${suda.redis.port}
+    password: ${suda.redis.password}
+    database: ${suda.redis.database}
+
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.suda.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com:
+      suda:
+        mapper: debug
+        service: info
+        controller: info
+
+suda:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: itcast
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+    # 用户端jwt秘钥
+    user-secret-key: itheima
+    # 用户端jwt过期时间(2小时)
+    user-ttl: 7200000
+    # 用户端令牌名称
+    user-token-name: authentication
+  alioss:
+    endpoint: ${suda.alioss.endpoint}
+    access-key-id: ${suda.alioss.access-key-id}
+    access-key-secret: ${suda.alioss.access-key-secret}
+    bucket-name: ${suda.alioss.bucket-name}
+  wechat:
+    app-id: ${suda.wechat.app-id}
+    secret: ${suda.wechat.secret}
+
+    mchid: ${suda.wechat.mchid}
+    mchSecret: ${suda.wechat.mchSecret}
+    privateKeyFilePath: ${suda.wechat.privateKeyFilePath}
+    apiV3Key: ${suda.wechat.apiV3Key}
+    weChatPayCertFilePath: ${suda.wechat.weChatPayCertFilePath}
+    notifyUrl: ${suda.wechat.notifyUrl}
+    refundNotifyUrl: ${suda.wechat.refundNotifyUrl}
+  shop:
+    address: 北京市海淀区上地十街10号
+  baidu:
+    ak: cnGmF1HUinE9B9I0WWBGauLHzvHv6Uz4
+

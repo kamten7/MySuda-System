@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant 小程序 as 微信小程序
+    participant 后端 as Spring Boot 后端
+    participant 微信 as 微信服务器
+    participant 数据库 as 数据库
+
+    小程序->>小程序: wx.login() 获取临时登录凭证 code
+    小程序->>后端: POST /user/user/login<br/>{code: "临时登录凭证"}
+    后端->>微信: GET https://api.weixin.qq.com/sns/jscode2session<br/>appid + secret + js_code
+    微信-->>后端: 返回 openid + session_key
+    后端->>数据库: 根据 openid 查询用户
+    alt 新用户
+        后端->>数据库: 自动注册新用户
+    end
+    后端->>后端: 生成 JWT Token<br/>claims: {userId: 123}
+    后端-->>小程序: {id, token, openid}
+    小程序->>小程序: 存储 token 到本地
