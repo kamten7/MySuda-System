@@ -79,7 +79,11 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //2、地址簿超出配送范围
-        checkOutOfRange(addressBook.getDetail());
+        String fullAddress = addressBook.getProvinceName()
+                + addressBook.getCityName()
+                + addressBook.getDistrictName()
+                + addressBook.getDetail();
+        checkOutOfRange(fullAddress);
 
         //查询当前用户的购物车数据，判断是否为空
         Long userId = BaseContext.getCurrentId();
@@ -558,7 +562,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 检查客户的收货地址是否超出配送范围
-     * @param address
+     * @param address 客户收货地址
      */
     private void checkOutOfRange(String address) {
         Map map = new HashMap();
@@ -613,6 +617,13 @@ public class OrderServiceImpl implements OrderService {
         JSONObject result = jsonObject.getJSONObject("result");
         JSONArray jsonArray = (JSONArray) result.get("routes");
         Integer distance = (Integer) ((JSONObject) jsonArray.get(0)).get("distance");
+
+
+
+        //地址日志
+        log.info("店铺地址: {}", shopAddress);
+        log.info("用户地址: {}", address);
+        log.info("配送距离: {} 米", distance);
 
         if(distance > 5000){
             //配送距离超过5000米
