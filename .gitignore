@@ -34,6 +34,13 @@ Thumbs.db
 # === Reports ===
 report.*.json
 
+# === Sensitive config ===
+application-dev.yml
+application-prod.yml
+.env
+.env.*
+!.env.example
+
 # === IDE ===
 .vscode/
 .settings/

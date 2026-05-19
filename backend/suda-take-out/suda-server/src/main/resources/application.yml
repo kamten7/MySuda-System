@@ -71,5 +71,5 @@ suda:
   shop:
     address: 北京市海淀区上地十街10号
   baidu:
-    ak: cnGmF1HUinE9B9I0WWBGauLHzvHv6Uz4
+    ak: ${SUDA_BAIDU_AK}
 

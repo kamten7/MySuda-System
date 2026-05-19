@@ -1,0 +1,34 @@
+# ===========================================
+# application-dev.yml 配置模板
+# 复制此文件为 application-dev.yml 并填入真实值
+# WARNING: application-dev.yml 包含敏感信息，请勿提交到 Git！
+# ===========================================
+
+suda:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    host: localhost
+    port: 3306
+    database: sky_take_out
+    username: root
+    password: 你的数据库密码
+  alioss:
+    endpoint: oss-cn-shenzhen.aliyuncs.com
+    access-key-id: 你的阿里云AccessKeyId
+    access-key-secret: 你的阿里云AccessKeySecret
+    bucket-name: kamtenbucket-sky
+  redis:
+    host: localhost
+    port: 6380
+    password: 你的Redis密码
+    database: 1
+  wechat:
+    app-id: 你的微信AppId
+    secret: 你的微信AppSecret
+    mchid: 你的商户号
+    mchSecret: 你的商户密钥
+    privateKeyFilePath:
+    apiV3Key: 你的APIv3密钥
+    weChatPayCertFilePath: D:/path/to/your/apiclient_cert.pem
+    notifyUrl: 你的支付回调地址
+    refundNotifyUrl: 你的退款回调地址
