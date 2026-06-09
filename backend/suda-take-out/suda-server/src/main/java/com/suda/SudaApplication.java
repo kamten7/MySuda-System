@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement //开启注解方式的事务管理
-@Slf4j
-@EnableCaching
-@EnableScheduling
+@Slf4j//开启日志注解，log.info("server started") 打印日志
+@EnableCaching//开启缓存注解，@Cacheable("empCache") 缓存员工
+@EnableScheduling//开启定时任务注解，@Scheduled(cron = "0 0 0 * * ?") 每天凌晨0点执行一次
 public class SudaApplication {
 
     public static void main(String[] args) {
