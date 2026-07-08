@@ -4,14 +4,15 @@ target/
 *.jar
 *.war
 *.log
-.idea/
-*.iml
 
 # === Node / Vue ===
 node_modules/
 dist/
-.env.local
+*.local
+.env
+.env.*
 .env.*.local
+!.env.example
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -34,16 +35,18 @@ Thumbs.db
 # === Reports ===
 report.*.json
 
-# === Sensitive config ===
-application-dev.yml
-application-prod.yml
-.env
-.env.*
-!.env.example
-
 # === IDE ===
+.idea/
 .vscode/
+*.iml
 .settings/
 .project
 .classpath
 .factorypath
+
+# === Sensitive config ===
+application-dev.yml
+application-prod.yml
+
+# === Deprecated (removed from tracking) ===
+front/project-suda-admin-vue-ts/
