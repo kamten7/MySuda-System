@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <rect width="60" height="60" rx="12" fill="#d32f2f"/>
+  <text x="30" y="40" text-anchor="middle" font-size="32" font-weight="bold" fill="#fff" font-family="sans-serif">速</text>
+  <text x="74" y="38" font-size="20" font-weight="bold" fill="#d32f2f" font-family="sans-serif">速达外卖</text>
+  <text x="74" y="54" font-size="11" fill="#999" font-family="sans-serif">SUDA EXPRESS</text>
+</svg>

@@ -1,0 +1,642 @@
+// ==========================================
+// 速达外卖 Admin - Element Plus Style Overrides
+// Brand: primary #1a56db (deep blue), accent #f59e0b (amber)
+// ==========================================
+
+// ==================== CSS Variables Override ====================
+:root {
+  --el-color-primary: #1a56db;
+  --el-color-primary-light-3: #749ae9;
+  --el-color-primary-light-5: #8dabed;
+  --el-color-primary-light-7: #b7cbf4;
+  --el-color-primary-light-8: #cbd9f7;
+  --el-color-primary-light-9: #e5edfb;
+  --el-color-primary-dark-2: #1e3a8a;
+  --el-color-success: #10b981;
+  --el-color-warning: #f59e0b;
+  --el-color-danger: #ef4444;
+  --el-color-info: #6366f1;
+
+  --el-border-radius-base: 6px;
+  --el-border-radius-small: 4px;
+  --el-border-radius-round: 20px;
+  --el-font-size-base: 14px;
+}
+
+// ==================== Button Overrides ====================
+.el-button--primary {
+  --el-button-bg-color: #1a56db;
+  --el-button-border-color: #1a56db;
+  --el-button-hover-bg-color: #1e40af;
+  --el-button-hover-border-color: #1e40af;
+  --el-button-active-bg-color: #1e3a8a;
+  --el-button-active-border-color: #1e3a8a;
+}
+
+.el-button--warning {
+  --el-button-bg-color: #f59e0b;
+  --el-button-border-color: #f59e0b;
+  --el-button-text-color: #333;
+  --el-button-hover-bg-color: #d97706;
+  --el-button-hover-border-color: #d97706;
+  --el-button-hover-text-color: #333;
+}
+
+// ==================== Menu Overrides (Sidebar) ====================
+.el-menu {
+  border-right: none !important;
+}
+
+.el-menu--vertical {
+  .el-menu-item,
+  .el-sub-menu__title {
+    &:hover {
+      background-color: var(--sidebar-hover) !important;
+    }
+  }
+}
+
+.el-menu-item {
+  &.is-active {
+    background-color: var(--sidebar-active) !important;
+    color: #fff !important;
+  }
+}
+
+// ==================== Table Overrides ====================
+.el-table {
+  --el-table-header-bg-color: #fafafa;
+  --el-table-row-hover-bg-color: #eff6ff;
+
+  th.el-table__cell {
+    background-color: #fafafa;
+    font-weight: 600;
+    color: #333;
+    height: 48px;
+  }
+
+  td.el-table__cell {
+    height: 44px;
+  }
+}
+
+// ==================== Dialog Overrides ====================
+.el-dialog {
+  border-radius: 8px;
+
+  .el-dialog__header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-right: 0;
+
+    .el-dialog__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+
+  .el-dialog__body {
+    padding: 24px;
+  }
+
+  .el-dialog__footer {
+    padding: 12px 24px 20px;
+    border-top: 1px solid #f0f0f0;
+  }
+}
+
+// ==================== Form Overrides ====================
+.el-form-item__label {
+  font-weight: 500;
+  color: #555;
+}
+
+.el-input__wrapper {
+  border-radius: 4px;
+}
+
+.el-select .el-input__wrapper {
+  border-radius: 4px;
+}
+
+// ==================== Tag Overrides ====================
+.el-tag {
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+// ==================== Pagination Overrides ====================
+.el-pagination {
+  justify-content: flex-end;
+  padding: 16px 0;
+
+  .el-pager li {
+    border-radius: 4px;
+
+    &.is-active {
+      background-color: #1a56db;
+    }
+  }
+
+  .btn-prev,
+  .btn-next {
+    border-radius: 4px;
+  }
+}
+
+// ==================== Card Overrides ====================
+.el-card {
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+
+  .el-card__header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 600;
+  }
+}
+
+// ==================== Tabs Overrides ====================
+.el-tabs__active-bar {
+  background-color: #1a56db;
+}
+
+.el-tabs__item {
+  &.is-active {
+    color: #1a56db;
+  }
+
+  &:hover {
+    color: #1a56db;
+  }
+}
+
+// ==================== Switch Overrides ====================
+.el-switch {
+  &.is-checked .el-switch__core {
+    background-color: #1a56db;
+    border-color: #1a56db;
+  }
+}
+
+// ==================== Radio & Checkbox Overrides ====================
+.el-radio__input.is-checked .el-radio__inner {
+  background-color: #1a56db;
+  border-color: #1a56db;
+}
+
+.el-radio__input.is-checked + .el-radio__label {
+  color: #1a56db;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  background-color: #1a56db;
+  border-color: #1a56db;
+}
+
+.el-checkbox__input.is-checked + .el-checkbox__label {
+  color: #1a56db;
+}
+
+// ==================== Loading & Progress ====================
+.el-loading-spinner .circular circle {
+  stroke: #1a56db;
+}
+
+.el-progress-bar__inner {
+  background-color: #1a56db;
+}
+
+// ==================== Message Box ====================
+.el-message-box__headerbtn:hover .el-message-box__close {
+  color: #1a56db;
+}
+
+// ==================== DatePicker ====================
+.el-date-table td.today span {
+  color: #1a56db;
+}
+
+.el-date-table td.current:not(.disabled) span {
+  background-color: #1a56db;
+}
+
+.el-picker-panel__icon-btn:hover {
+  color: #1a56db;
+}
+
+// ==================== Dropdown ====================
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  background-color: #eff6ff;
+  color: #1a56db;
+}
+
+// ==================== Steps ====================
+.el-step.is-process {
+  .el-step__icon {
+    background-color: #1a56db;
+    border-color: #1a56db;
+  }
+  .el-step__title {
+    color: #1a56db;
+  }
+}
+
+.el-step.is-finish {
+  .el-step__icon {
+    color: #1a56db;
+  }
+  .el-step__title {
+    color: #1a56db;
+  }
+}
+
+// ==================== Notification ====================
+.el-notification {
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+// ==================== Breadcrumb ====================
+.el-breadcrumb__item {
+  .el-breadcrumb__inner {
+    &.is-link {
+      color: #909399;
+      &:hover {
+        color: #1a56db;
+      }
+    }
+  }
+}
+
+// ==================== Avatar ====================
+.el-avatar {
+  background-color: #1a56db;
+}
+
+// ==================== Badge ====================
+.el-badge__content--danger {
+  background-color: #1a56db;
+}
+
+// ==========================================
+// === DARK MODE - Comprehensive Overrides ===
+// ==========================================
+html.dark {
+  // -- Backgrounds --
+  --el-bg-color: #0f172a;
+  --el-bg-color-overlay: #1e293b;
+  --el-bg-color-page: #0f172a;
+  --el-fill-color-blank: #1e293b;
+  --el-fill-color-light: #334155;
+  --el-fill-color-lighter: #475569;
+  --el-border-color: #334155;
+  --el-border-color-light: #334155;
+  --el-border-color-lighter: #1e293b;
+  --el-border-color-extra-light: #1e293b;
+  --el-text-color-primary: #e2e8f0;
+  --el-text-color-regular: #cbd5e1;
+  --el-text-color-secondary: #94a3b8;
+  --el-text-color-placeholder: #64748b;
+  --el-mask-color: rgba(0, 0, 0, 0.7);
+
+  // -- Table --
+  .el-table {
+    --el-table-bg-color: #1e293b;
+    --el-table-tr-bg-color: #1e293b;
+    --el-table-header-bg-color: #0f172a;
+    --el-table-row-hover-bg-color: #334155;
+    --el-table-border-color: #334155;
+    --el-table-text-color: #e2e8f0;
+    --el-table-header-text-color: #cbd5e1;
+
+    th.el-table__cell {
+      background-color: #0f172a;
+      color: #cbd5e1;
+      border-bottom-color: #334155;
+    }
+
+    td.el-table__cell {
+      border-bottom-color: #334155;
+    }
+
+    &--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+      background-color: #1a2332;
+    }
+
+    // Fix table inner borders
+    .el-table__inner-wrapper::before {
+      background-color: #334155;
+    }
+  }
+
+  // -- Card --
+  .el-card {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+
+    .el-card__header {
+      border-bottom-color: #334155;
+      color: #e2e8f0;
+    }
+  }
+
+  // -- Dialog --
+  .el-dialog {
+    background-color: #1e293b;
+
+    .el-dialog__header {
+      border-bottom-color: #334155;
+    }
+    .el-dialog__title { color: #e2e8f0; }
+    .el-dialog__body { color: #cbd5e1; }
+    .el-dialog__footer {
+      border-top-color: #334155;
+    }
+  }
+
+  // -- Form --
+  .el-form-item__label { color: #cbd5e1; }
+
+  .el-input__wrapper {
+    background-color: #0f172a;
+    box-shadow: 0 0 0 1px #334155;
+  }
+
+  .el-input__inner { color: #e2e8f0; }
+
+  .el-select .el-input .el-select__caret { color: #94a3b8; }
+
+  // -- Dropdown / Popper --
+  .el-dropdown-menu {
+    background-color: #1e293b;
+    border-color: #334155;
+
+    .el-dropdown-menu__item {
+      color: #cbd5e1;
+      &:hover { background-color: #334155; }
+      &:not(.is-disabled):hover { background-color: #334155; color: #60a5fa; }
+    }
+  }
+
+  .el-select-dropdown {
+    background-color: #1e293b;
+    border-color: #334155;
+  }
+
+  .el-select-dropdown__item {
+    color: #cbd5e1;
+    &.hover, &:hover { background-color: #334155; }
+    &.selected { color: #60a5fa; }
+  }
+
+  .el-popper.is-light {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+  }
+
+  // -- Pagination --
+  .el-pagination {
+    .btn-prev, .btn-next {
+      background-color: #1e293b;
+      color: #cbd5e1;
+    }
+    .el-pager li {
+      background-color: #1e293b;
+      color: #cbd5e1;
+      &.is-active { background-color: #1a56db; color: #fff; }
+    }
+    .el-input__wrapper { background-color: #1e293b; }
+  }
+
+  // -- Tabs --
+  .el-tabs__header { border-bottom-color: #334155; }
+  .el-tabs__nav-wrap::after { background-color: #334155; }
+  .el-tabs__item { color: #94a3b8; }
+
+  // -- DatePicker --
+  .el-picker-panel {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+  }
+  .el-date-picker__header-label { color: #cbd5e1; }
+  .el-date-table th { color: #94a3b8; }
+  .el-date-table td { color: #cbd5e1; }
+  .el-month-table td .cell,
+  .el-year-table td .cell { color: #cbd5e1; }
+
+  // -- Tag --
+  .el-tag {
+    &.el-tag--info { background-color: #334155; border-color: #475569; color: #94a3b8; }
+  }
+
+  // -- Divider --
+  .el-divider { border-top-color: #334155; }
+
+  // -- Empty --
+  .el-empty__description { color: #64748b; }
+
+  // -- Skeleton --
+  .el-skeleton__item { background-color: #334155; }
+
+  // -- Switch --
+  .el-switch__core { background-color: #475569; }
+
+  // -- Radio --
+  .el-radio__label { color: #cbd5e1; }
+  .el-radio__inner { background-color: #0f172a; border-color: #475569; }
+
+  // -- Checkbox --
+  .el-checkbox__label { color: #cbd5e1; }
+  .el-checkbox__inner { background-color: #0f172a; border-color: #475569; }
+
+  // -- Input number --
+  .el-input-number__decrease, .el-input-number__increase {
+    background-color: #1e293b;
+    color: #cbd5e1;
+    &:hover { color: #60a5fa; }
+  }
+
+  // -- Tooltip --
+  .el-tooltip__popper.is-dark {
+    background-color: #1e293b;
+    color: #e2e8f0;
+  }
+
+  // -- Message Box --
+  .el-message-box {
+    background-color: #1e293b;
+    border-color: #334155;
+    .el-message-box__title { color: #e2e8f0; }
+    .el-message-box__content { color: #cbd5e1; }
+    .el-message-box__status.el-icon { color: #60a5fa; }
+  }
+
+  // -- Notification --
+  .el-notification {
+    background-color: #1e293b;
+    border-color: #334155;
+    .el-notification__title { color: #e2e8f0; }
+    .el-notification__content { color: #cbd5e1; }
+  }
+
+  // -- Loading --
+  .el-loading-mask { background-color: rgba(15, 23, 42, 0.8); }
+
+  // -- Popconfirm --
+  .el-popconfirm { background-color: #1e293b; border-color: #334155; color: #cbd5e1; }
+
+  // -- Breadcrumb --
+  .el-breadcrumb__item .el-breadcrumb__inner { color: #94a3b8; }
+
+  // Fix custom page components
+  .content-card, .stat-card, .table-page .table-bar, .table-page .table-box {
+    background-color: #1e293b !important;
+    color: #e2e8f0;
+    border-color: #334155;
+  }
+
+  .table-page .table-bar label { color: #cbd5e1; }
+
+  .page-header-title, .section-title, .chart-title {
+    color: #e2e8f0 !important;
+  }
+
+  .page-header-subtitle, .overview-label, .order-stat-label, .stat-card__title {
+    color: #94a3b8 !important;
+  }
+
+  .overview-value, .stat-card__number, .order-stat-number {
+    &.all, &.completed { color: #10b981; }
+    &.pending { color: #ef4444; }
+    &.delivering { color: #60a5fa; }
+    &.cancelled { color: #64748b; }
+  }
+
+  .sold .overview-value { color: #60a5fa; }
+
+  .dashboard-page {
+    h2, h3, h4 { color: #e2e8f0; }
+    .text-gray-800 { color: #e2e8f0 !important; }
+  }
+
+  // ==========================================
+  // === KILL WHITE BACKGROUNDS IN DARK MODE ===
+  // ==========================================
+  // These override Tailwind utility classes used in page components.
+  // We use !important because Tailwind generates these with high specificity.
+
+  // Backgrounds — kill all whites
+  .bg-white {
+    background-color: #1e293b !important;
+  }
+
+  // Border overrides
+  .border-gray-100 { border-color: #334155 !important; }
+  .border-gray-200 { border-color: #334155 !important; }
+  .border-t-gray-100 { border-top-color: #334155 !important; }
+  .border-b-gray-100 { border-bottom-color: #334155 !important; }
+
+  // Shadow — darker in dark mode
+  .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.35) !important; }
+  .shadow-md { box-shadow: 0 4px 6px rgba(0,0,0,0.4) !important; }
+
+  // Text colors — light on dark
+  .text-gray-800 { color: #e2e8f0 !important; }
+  .text-gray-700 { color: #cbd5e1 !important; }
+  .text-gray-600 { color: #94a3b8 !important; }
+  .text-gray-500 { color: #94a3b8 !important; }
+  .text-gray-400 { color: #64748b !important; }
+
+  // Common page component backgrounds
+  .bg-gray-50 { background-color: #0f172a !important; }
+  .bg-gray-100 { background-color: #1e293b !important; }
+
+  // Divider lines
+  hr, .el-divider { border-color: #334155 !important; }
+
+  // Hover states on white backgrounds
+  .hover\:bg-gray-50:hover { background-color: #334155 !important; }
+  .hover\:bg-gray-100:hover { background-color: #334155 !important; }
+
+  // StatCard specific
+  .stat-card {
+    background: #1e293b !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
+    .stat-card__number { color: #e2e8f0 !important; }
+  }
+
+  // Order stat cards
+  .order-stat-card {
+    background: #1e293b !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3) !important;
+  }
+
+  // Overview items
+  .overview-item {
+    background: #1e293b !important;
+  }
+
+  // Table actions bar
+  .table-actions {
+    background: #1e293b !important;
+  }
+
+  // Custom page header titles
+  h1, h2, h3, h4, h5 {
+    &.text-gray-800, &.text-gray-700, &.text-gray-900 {
+      color: #e2e8f0 !important;
+    }
+  }
+
+  // Fix input group addons
+  .el-input-group__append, .el-input-group__prepend {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+  }
+
+  // Fix select tags
+  .el-select .el-tag {
+    background-color: #334155;
+    border-color: #475569;
+    color: #cbd5e1;
+  }
+
+  // Fix transfer panels
+  .el-transfer-panel {
+    background-color: #1e293b;
+    border-color: #334155;
+    .el-transfer-panel__header { background-color: #0f172a; border-bottom-color: #334155; }
+    .el-transfer-panel__item:hover { background-color: #334155; }
+  }
+
+  // Fix cascader
+  .el-cascader__dropdown {
+    background-color: #1e293b;
+    border-color: #334155;
+  }
+  .el-cascader-node:not(.is-disabled):hover {
+    background-color: #334155;
+  }
+  .el-cascader-menu {
+    border-right-color: #334155;
+    color: #cbd5e1;
+  }
+
+  // Fix time picker
+  .el-time-panel {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #cbd5e1;
+    .el-time-panel__footer { border-top-color: #334155; }
+  }
+  .el-time-spinner__item { color: #cbd5e1; }
+  .el-time-spinner__item:hover:not(.disabled):not(.active) {
+    background-color: #334155;
+  }
+}
