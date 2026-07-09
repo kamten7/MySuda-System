@@ -13,7 +13,7 @@
 | 端 | 技术栈 | 目录 | 说明 |
 |---|--------|------|------|
 | **后端服务** | Spring Boot + MyBatis + MySQL + Redis | `backend/suda-take-out/` | RESTful API 服务，JWT 双通道认证 |
-| **商家管理端** | Vue.js + TypeScript + Element UI | `front/project-suda-admin-vue-ts/` | SPA 后台管理系统 |
+| **商家管理端** | Vue 3 + TypeScript + Element Plus + Tailwind | `front/project-suda-admin-vue3/` | SPA 后台管理系统 |
 | **用户小程序端** | Uni-app (微信小程序) | `front/mp-weixin/` | C 端用户点餐小程序 |
 
 核心技术挑战包括：JWT 双通道认证体系设计、基于 ThreadLocal 的用户上下文隔离、AOP 自动字段填充减少样板代码、WebSocket 实时推送实现来单提醒与催单通知、Spring Cache + Redis 缓存策略优化高并发菜品查询、百度地图 API 配送范围校验、微信支付 V3 API 集成及回调处理、定时任务处理超时订单取消与派送状态流转、Apache POI 生成运营数据 Excel 报表并支持前端 Blob 下载。
@@ -69,46 +69,44 @@ suda-take-out/
 
 | 类别 | 技术 | 版本 | 用途 |
 |------|------|------|------|
-| 核心框架 | Spring Boot | 2.7.3 | IoC 容器、自动配置、嵌入式 Tomcat |
-| JDK | Java | 17 | LTS 版本 |
+| 核心框架 | Spring Boot | 3.4.3 | IoC 容器、自动配置、嵌入式 Tomcat |
+| JDK | Java | 17 (LTS) | 长期支持版本 |
 | 构建工具 | Maven | 3.6+ | 多模块项目依赖管理 |
-| 持久层 | MyBatis | 2.2.0 | SQL 与对象映射，XML 编写复杂查询 |
-| 分页插件 | PageHelper | 1.3.0 | 透明分页，不侵入业务代码 |
-| 连接池 | Druid | 1.2.1 | 高性能数据库连接池，内置 SQL 监控 |
+| 持久层 | MyBatis | 3.0.4 | SQL 与对象映射，XML 编写复杂查询 |
+| 分页插件 | PageHelper | 2.1.0 | 透明分页，不侵入业务代码 |
+| 连接池 | Druid | 1.2.23 | 高性能数据库连接池，内置 SQL 监控 |
 | 数据库 | MySQL | 8.0+ | 关系型数据库 |
-| 缓存 | Redis + Spring Cache | - | 套餐/菜品数据缓存，减少数据库压力 |
-| 认证授权 | JWT (jjwt) | 0.9.1 | 无状态 Token 认证，管理端/用户端双密钥 |
-| API 文档 | Knife4j | 3.0.2 | Swagger 增强，分组展示管理端/用户端接口 |
-| 实时通信 | WebSocket (JSR 356) | - | 来单提醒、客户催单实时推送 |
-| AOP | AspectJ | 1.9.4 | 自定义注解 + 切面实现公共字段自动填充 |
+| 缓存 | Redis + Spring Cache | — | 套餐/菜品数据缓存，减少数据库压力 |
+| 认证授权 | JWT (JJWT) | 0.12.6 | 无状态 Token 认证，管理端/用户端双密钥 |
+| API 文档 | Knife4j | 4.5.0 | Swagger / OpenAPI 3 增强，分组展示管理端/用户端接口 |
+| 实时通信 | WebSocket (JSR 356) | — | 来单提醒、客户催单实时推送 |
+| AOP | AspectJ | 1.9.22 | 自定义注解 + 切面实现公共字段自动填充 |
 | 文件存储 | 阿里云 OSS SDK | 3.10.2 | 菜品/套餐图片上传与回显 |
-| JSON 处理 | Fastjson | 1.2.76 | 高性能 JSON 序列化/反序列化 |
-| JSON 扩展 | Jackson | - | Spring MVC 默认，自定义 ObjectMapper 处理日期格式 |
-| Excel | Apache POI | 3.16 | 运营数据报表导出 |
+| JSON 处理 | Fastjson2 | 2.0.53 | 高性能 JSON 序列化/反序列化 |
+| Excel | Apache POI | 5.4.0 | 运营数据报表导出 |
 | 微信支付 | wechatpay-apiv3 | 0.4.8 | 微信支付 V3 API，Apache HttpClient 签名 |
-| 地图 API | 百度地图 API | - | 地址地理编码 + 路线规划 + 配送范围校验 |
-| 工具类 | Commons Lang | 2.6 | 常用工具方法 |
-| 简化代码 | Lombok | 1.18.20 | 自动生成 getter/setter/构造器 |
-| 内网穿透 | Cpolar | - | 开发环境微信回调穿透 |
+| 地图 API | 百度地图 API | — | 地址地理编码 + 路线规划 + 配送范围校验 |
+| AI 集成 | LangChain4j | 1.6.0 | AI Agent 智能问答 |
+| 工具类 | Commons Lang3 | 3.17.0 | 常用工具方法 |
+| 简化代码 | Lombok | 1.18.36 | 自动生成 getter/setter/构造器 |
+| 内网穿透 | Cpolar | — | 开发环境微信回调穿透 |
 
 ### 前端技术（商家管理端）
 
 | 类别 | 技术 | 版本 | 用途 |
 |------|------|------|------|
-| 框架 | Vue.js | 2.6.14 | 渐进式 MVVM 框架 |
-| 语言 | TypeScript | 4.9.5 | 类型安全，大型项目可维护性 |
-| 构建 | Vue CLI 5 + Webpack 5 | - | 脚手架、打包优化、代码分割 |
-| UI 库 | Element UI | 2.15.14 | 企业级桌面端组件库（表格、表单、对话框、消息提示） |
-| 状态管理 | Vuex + vuex-module-decorators | 3.6+ | 装饰器风格的模块化状态管理，Token/用户信息持久化 |
-| 路由 | Vue Router | 3.6.5 | SPA 路由，懒加载 + 导航守卫 |
-| HTTP | Axios | 0.27.2 | 请求/响应拦截、统一错误处理 |
-| 图表 | ECharts | 5.5.1 | 数据统计可视化（折线图、柱状图、饼图） |
+| 框架 | Vue 3 (Composition API) | 3.5+ | `<script setup lang="ts">` 风格 |
+| 语言 | TypeScript | 5.6 | 类型安全，大型项目可维护性 |
+| 构建 | Vite | 6.x | 极速 HMR，ESBuild 预构建 |
+| UI 库 | Element Plus | 2.9+ | 企业级桌面端组件库（表格、表单、对话框、消息提示） |
+| 状态管理 | Pinia | 2.x | Vue 3 官方推荐状态管理，Token/用户信息持久化 |
+| 路由 | Vue Router | 4.x | SPA 路由，懒加载 + 导航守卫 |
+| HTTP | Axios | 1.x | 请求/响应拦截、统一错误处理 |
+| 图表 | ECharts 5 + vue-echarts | 5.5 / 7.0 | 数据统计可视化（折线图、柱状图、饼图） |
+| CSS | Tailwind CSS + SCSS | 3.4 | 原子化 CSS + SCSS 预处理 |
 | 进度条 | NProgress | 0.2.0 | 页面加载进度指示 |
-| Cookie | js-cookie | 2.2.1 | Token 及用户信息本地持久化 |
-| 省市区 | vue-area-linkage | 5.1.0 | 地址省市区三级联动选择 |
-| CSS | Sass/SCSS | 1.69.7 | CSS 预处理器 |
-| 图标 | vue-svgicon | 3.2.9 | SVG 图标组件化管理 |
-| 加密 | md5 | 2.3.0 | 密码前端 MD5 摘要 |
+| Cookie | js-cookie | 3.0 | Token 及用户信息本地持久化 |
+| 代码规范 | ESLint + Prettier + Husky | — | 代码格式化 + Git Hooks |
 
 ### 用户小程序端
 
@@ -497,13 +495,13 @@ mvn spring-boot:run
 
 ```bash
 # 进入前端项目
-cd front/project-suda-admin-vue-ts
+cd front/project-suda-admin-vue3
 
 # 首次运行需安装依赖
 npm install
 
 # 启动开发服务器
-npm run serve
+npm run dev
 ```
 
 启动后浏览器访问 **`http://localhost:8888`**，进入商家后台管理登录页面。
@@ -537,7 +535,7 @@ cpolar http 8080
 | 端 | 目录 | 启动命令 | 默认地址 |
 |---|------|---------|---------|
 | 后端 API | `backend/suda-take-out/` | `mvn clean install -DskipTests && cd suda-server && mvn spring-boot:run` | `http://localhost:8080` |
-| 商家管理端 | `front/project-suda-admin-vue-ts/` | `npm install && npm run serve` | `http://localhost:8888` |
+| 商家管理端 | `front/project-suda-admin-vue3/` | `npm install && npm run dev` | `http://localhost:8888` |
 | 用户小程序端 | `front/mp-weixin/` | 微信开发者工具导入 | 工具内预览 |
 | Cpolar 穿透 | - | `cpolar http 8080` | `https://xxxx.r30.cpolar.top` |
 | API 文档 | - | 后端启动后访问 | `http://localhost:8080/doc.html` |
@@ -557,19 +555,18 @@ cpolar http 8080
 ## 项目目录
 
 ```
-changqiowaimai/
+SUDAWAIMAI/
 ├── backend/
 │   └── suda-take-out/            # 后端 Maven 多模块工程
 │       ├── suda-common/          # 公共模块
 │       ├── suda-pojo/            # 实体模块
 │       └── suda-server/          # 服务启动模块
 ├── front/
-│   ├── project-suda-admin-vue-ts/ # 商家管理端 (Vue.js SPA)
-│   ├── mp-weixin/                 # 用户小程序端 (Uni-app)
-│   └── frontEnv/                  # Nginx 前端部署资源
-└── test/                          # 测试项目
+│   ├── project-suda-admin-vue3/  # 商家管理端 (Vue 3 SPA)
+│   └── mp-weixin/                # 用户小程序端 (Uni-app)
+└── sql/                          # 数据库初始化脚本
 ```
 
 - 后端项目: [suda-take-out](./)
-- 前端管理端: [project-suda-admin-vue-ts](../front/project-suda-admin-vue-ts)
+- 前端管理端: [project-suda-admin-vue3](../front/project-suda-admin-vue3)
 - 小程序端: [mp-weixin](../front/mp-weixin) — 独立 Uni-app 工程（微信开发者工具导入）

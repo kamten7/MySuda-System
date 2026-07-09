@@ -31,6 +31,7 @@
         <aspectj>1.9.22</aspectj>
         <jjwt>0.12.6</jjwt>
         <poi>5.4.0</poi>
+        <langchain4j>1.6.0</langchain4j>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -130,6 +131,15 @@
                 <groupId>com.github.wechatpay-apiv3</groupId>
                 <artifactId>wechatpay-apache-httpclient</artifactId>
                 <version>0.4.8</version>
+            </dependency>
+
+            <!-- LangChain4j BOM — 统一管理所有 langchain4j 依赖版本 -->
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-bom</artifactId>
+                <version>${langchain4j}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
         </dependencies>
