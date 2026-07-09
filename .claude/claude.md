@@ -42,6 +42,7 @@ npm run build                # 生产构建
 
 | 模板（已提交） | 真实配置（git-ignore） |
 |---|---|
+| `.env.example`（根目录） | `.env` |
 | `suda-server/.../application-dev.yml.example` | `application-dev.yml` |
 | `front/project-suda-admin-vue3/.env.example` | `.env` |
 
