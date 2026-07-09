@@ -9,8 +9,8 @@ import com.suda.result.Result;
 import com.suda.service.UserService;
 import com.suda.utils.JwtUtil;
 import com.suda.vo.UserLoginVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +25,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/user/user")
-@Api(tags = "用户相关接口")
+@Tag(name = "用户相关接口")
 public class UserController {
 
 
@@ -41,7 +41,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/login")
-    @ApiOperation("微信登录")
+    @Operation(summary = "微信登录")
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
         log.info("微信登录，参数：{}", userLoginDTO.getCode());
         //微信登录

@@ -2,8 +2,8 @@ package com.suda.controller.admin;
 
 
 import com.suda.result.Result;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/admin/shop")
-@Api(tags = "管理员店铺相关接口")
+@Tag(name = "管理员店铺相关接口")
 public class adminShopController {
 
     public static final String KEY="SHOP_STATUS";
@@ -26,7 +26,7 @@ public class adminShopController {
      *
      */
     @PutMapping("/{status}")
-    @ApiOperation("设置营业状态")
+    @Operation(summary = "设置营业状态")
     public Result setStatus(@PathVariable Integer status) {
         log.info("设置营业状态为：{}", status == 1 ? "营业中" : "打样中");
         //使用redis来保存营业状态
@@ -39,7 +39,7 @@ public class adminShopController {
      * @return 营业状态
      */
     @GetMapping("/status")
-    @ApiOperation("获取营业状态")
+    @Operation(summary = "获取营业状态")
     public Result<Integer> getStatus() {
         log.info("获取到营业状态");
         Integer status = (Integer) redisTemplate.opsForValue().get(KEY);

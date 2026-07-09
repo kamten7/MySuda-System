@@ -11,6 +11,7 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: ${suda.datasource.driver-class-name}
       url: jdbc:mysql://${suda.datasource.host}:${suda.datasource.port}/${suda.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
@@ -21,6 +22,15 @@ spring:
     port: ${suda.redis.port}
     password: ${suda.redis.password}
     database: ${suda.redis.database}
+
+# springdoc-openapi 配置
+springdoc:
+  api-docs:
+    enabled: true
+
+# knife4j 增强
+knife4j:
+  enable: true
 
 mybatis:
   #mapper配置文件
@@ -41,7 +51,7 @@ logging:
 suda:
   jwt:
     # 设置jwt签名加密时使用的秘钥
-    admin-secret-key: itcast
+    admin-secret-key: kamten
     # 设置jwt过期时间：2小时
     admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
@@ -73,3 +83,15 @@ suda:
   baidu:
     ak: ${SUDA_BAIDU_AK}
 
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: https://api.deepseek.com/v1
+      api-key: YOUR_DEEPSEEK_API_KEY
+      model-name: deepseek-chat
+      timeout: 60000
+    streaming-chat-model:
+      base-url: https://api.deepseek.com/v1
+      api-key: YOUR_DEEPSEEK_API_KEY
+      model-name: deepseek-chat
+      timeout: 60000

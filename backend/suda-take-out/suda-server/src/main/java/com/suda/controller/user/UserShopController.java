@@ -2,8 +2,8 @@ package com.suda.controller.user;
 
 
 import com.suda.result.Result;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/user/shop")
-@Api(tags = "用户店铺相关接口")
+@Tag(name = "用户店铺相关接口")
 public class UserShopController{
 
     public static final String KEY="SHOP_STATUS";
@@ -24,7 +24,7 @@ public class UserShopController{
      * @return 营业状态
      */
     @GetMapping("/status")
-    @ApiOperation("获取营业状态")
+    @Operation(summary = "获取营业状态")
     public Result<Integer> getStatus() {
         log.info("获取到营业状态");
         Integer status = (Integer) redisTemplate.opsForValue().get(KEY);

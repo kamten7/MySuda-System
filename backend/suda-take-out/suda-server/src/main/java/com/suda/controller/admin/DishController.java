@@ -8,8 +8,8 @@ import com.suda.result.Result;
 
 import com.suda.service.DishService;
 import com.suda.vo.DishVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,7 +24,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/admin/dish")
 @Slf4j
-@Api(tags = "菜品相关接口")
+@Tag(name = "菜品相关接口")
 public class DishController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class DishController {
      * @return 新增结果集
      */
     @PostMapping
-    @ApiOperation(value = "新增菜品")
+    @Operation(summary = "新增菜品")
     public Result save(@RequestBody DishDTO dishDTO){
         log.info("新增菜品：{}", dishDTO);
         dishService.saveWithFlavor(dishDTO);
@@ -57,7 +57,7 @@ public class DishController {
      * @param pageQueryDTO 分页查询参数DTO
      */
     @GetMapping("/page")
-    @ApiOperation(value = "菜品管理分页查询")
+    @Operation(summary = "菜品管理分页查询")
     public Result<PageResult> page(DishPageQueryDTO pageQueryDTO){
         log.info("分页查询菜品：{}", pageQueryDTO);
         PageResult pageResult =dishService.pageQuery(pageQueryDTO);
@@ -69,7 +69,7 @@ public class DishController {
      *
      */
     @DeleteMapping
-    @ApiOperation(value = "批量删除菜品")
+    @Operation(summary = "批量删除菜品")
     public Result delete(@RequestParam List<Long> ids){
         log.info("批量删除菜品：{}", ids);
         dishService.deleteBatch(ids);
@@ -85,7 +85,7 @@ public class DishController {
      * @return 菜品信息
      */
     @GetMapping("/{id}")
-    @ApiOperation(value = "根据id查询菜品信息")
+    @Operation(summary = "根据id查询菜品信息")
     public Result<DishVO> getById(@PathVariable Long id){
         log.info("根据id查询菜品信息：{}", id);
         DishVO dishVO = dishService.getByIdWithFlavor(id);
@@ -98,7 +98,7 @@ public class DishController {
      * @return 修改结果集
      */
     @PutMapping
-    @ApiOperation(value = "修改菜品信息")
+    @Operation(summary = "修改菜品信息")
     public Result update(@RequestBody DishDTO dishDTO){
         log.info("修改菜品信息：{}", dishDTO);
         dishService.updateWithFlavor(dishDTO);
@@ -116,7 +116,7 @@ public class DishController {
      * @return
      */
     @PostMapping("/status/{status}")
-    @ApiOperation("菜品起售停售")
+    @Operation(summary = "菜品起售停售")
     public Result<String> startOrStop(@PathVariable Integer status, Long id){
         dishService.startOrStop(status, id);
 
@@ -132,7 +132,7 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
-    @ApiOperation("根据分类id查询菜品")
+    @Operation(summary = "根据分类id查询菜品")
     public Result<List<Dish>> list(Long categoryId){
         List<Dish> list = dishService.list(categoryId);
         return Result.success(list);

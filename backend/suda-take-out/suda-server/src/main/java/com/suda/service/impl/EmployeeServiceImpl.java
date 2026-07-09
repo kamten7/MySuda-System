@@ -23,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HexFormat;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -53,7 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //密码比对
         //对前端传过来的明文密码进行一个md5加密处理
-        password=DigestUtils.md5DigestAsHex(password.getBytes());
+        password = HexFormat.of().formatHex(DigestUtils.md5Digest(password.getBytes(StandardCharsets.UTF_8)));
 
         if (!password.equals(employee.getPassword())) {
             //密码错误
@@ -83,7 +86,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置账号的状态
         employee.setStatus(StatusConstant.ENABLE);
         //设置密码,默认是123456
-        employee.setPassword(DigestUtils.md5DigestAsHex((PasswordConstant.DEFAULT_PASSWORD.getBytes())));
+        employee.setPassword(HexFormat.of().formatHex(DigestUtils.md5Digest(PasswordConstant.DEFAULT_PASSWORD.getBytes(StandardCharsets.UTF_8))));
         //设置当前记录的创建时间和修改时间
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());

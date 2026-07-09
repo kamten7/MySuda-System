@@ -6,9 +6,14 @@ import com.suda.vo.TurnoverReportVO;
 import com.suda.vo.UserReportVO;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 
+/**
+ * 统计数据
+ * 报表服务接口
+ * 主要是用于统计运营数据报表，如营业额、用户数量、订单数量、销量排名top10等报表
+ */
 @Service
 public interface ReportService {
 

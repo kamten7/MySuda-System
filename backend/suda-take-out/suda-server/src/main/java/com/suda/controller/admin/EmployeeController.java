@@ -11,9 +11,8 @@ import com.suda.result.Result;
 import com.suda.service.EmployeeService;
 import com.suda.utils.JwtUtil;
 import com.suda.vo.EmployeeLoginVO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
-@Api(tags="员工相关接口")
+@Tag(name = "员工相关接口")
 public class EmployeeController {
 
     @Autowired
@@ -42,7 +41,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/login")
-    @ApiOperation(value="员工登录")
+    @Operation(summary = "员工登录")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
 
@@ -75,7 +74,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping("/logout")
-    @ApiOperation(value="员工退出登录")
+    @Operation(summary = "员工退出登录")
     public Result<String> logout() {
         return Result.success();
     }
@@ -87,7 +86,7 @@ public class EmployeeController {
      * @return
      */
     @PostMapping
-    @ApiOperation(value="新增员工")
+    @Operation(summary = "新增员工")
     public Result save(@RequestBody EmployeeDTO employeeDTO){
         log.info("新增员工，员工数据：{}", employeeDTO);
         System.out.println("当前线程的id"+Thread.currentThread().getId());
@@ -100,7 +99,7 @@ public class EmployeeController {
      * @param employeePageQueryDTO 分页查询参数
      * @return 分页查询结果
      */
-    @ApiOperation(value="员工分页查询")
+    @Operation(summary = "员工分页查询")
     @GetMapping("/page")
     public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO){
         log.info("员工分页查询，参数：{}", employeePageQueryDTO);
@@ -116,7 +115,7 @@ public class EmployeeController {
      * @param id 员工id
      * @return 禁用成功
      */
-    @ApiOperation(value="启用禁用员工账号")
+    @Operation(summary = "启用禁用员工账号")
     @PostMapping("/status/{status}")
     public Result startOrStop(@PathVariable Integer status,@RequestParam Long id){
         //这里的前端页面
@@ -135,7 +134,7 @@ public class EmployeeController {
      * @param id 员工id
      * @return 员工信息
      */
-    @ApiOperation(value="根据Id查询员工消息")
+    @Operation(summary = "根据Id查询员工消息")
     @GetMapping("/{id}")
     public Result<Employee> getById(@PathVariable Long id){
         log.info("根据Id查询员工消息：{}", id);
@@ -152,7 +151,7 @@ public class EmployeeController {
      */
     //复用增加员工的DTO
     @PutMapping
-    @ApiOperation(value="编辑员工信息")
+    @Operation(summary = "编辑员工信息")
     public Result update(@RequestBody EmployeeDTO employeeDTO){
         //因为前端传过来的是json数据，所以这里需要将json数据转为EmployeeDTO对象
         log.info("编辑员工信息：{}", employeeDTO);
