@@ -139,6 +139,24 @@
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-spring-boot-starter</artifactId>
         </dependency>
+
+
+        <!--- Spring AI 依赖 -->
+        <!-- Spring AI Core -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-core</artifactId>
+            <version>1.0.0-M5</version>
+        </dependency>
+
+        <!-- Spring AI OpenAI (或其他模型适配器) -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+            <version>1.0.0-M5</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
