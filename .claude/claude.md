@@ -6,9 +6,9 @@
 
 | 子项目 | 目录 | 说明 |
 |--------|------|------|
-| **后端服务** | `backend/suda-take-out/` | Spring Boot 2.7 + MyBatis + MySQL + Redis |
+| **后端服务** | `backend/suda-take-out/` | Spring Boot 3.4.3 + MyBatis + MySQL + Redis |
 | **管理端** | `front/project-suda-admin-vue3/` | Vue 3 + Vite + Element Plus + Tailwind + Pinia |
-| **小程序端** | `front/mp-weixin/` | Uni-app 微信小程序 |
+| **小程序端** | `front/mp-weixin/project-rjwm-weixin-uniapp/` | Uni-app (Vue 2) 微信小程序 |
 
 ## 常用命令
 
@@ -30,15 +30,15 @@ npm install && npm run dev   # 开发 → localhost:8888
 npm run build                # 生产构建
 ```
 
-开发代理：`/api/*` → `http://localhost:8080/admin/*`（去除 `/api` 前缀，见 `vite.config.ts`）
-
 ### 小程序端
 
-`front/mp-weixin/` 是 Uni-app 项目，用微信开发者工具导入运行。
+**必须通过 HBuilderX 运行**（本项目无 `package.json`，不通过 npm 管理）：
+
+1. 用 HBuilderX 打开项目目录 `front/mp-weixin/project-rjwm-weixin-uniapp`
+2. 运行 → 运行到小程序模拟器 → 微信开发者工具
+3. 微信开发者工具自动打开，勾选"不校验合法域名"
 
 ## 项目配置 — example 模板模式
-
-敏感配置通过模板文件管理：
 
 | 模板（已提交） | 真实配置（git-ignore） |
 |---|---|
@@ -52,83 +52,163 @@ npm run build                # 生产构建
 backend/suda-take-out/
 ├── suda-common/   → 工具类、常量、异常、Result/PageResult、BaseContext
 ├── suda-pojo/     → entity、dto、vo
-└── suda-server/   → controller、service、mapper、config、interceptor、aspect、task、websocket
+└── suda-server/   → controller、service、mapper、config、interceptor、aspect、task、websocket、AI/
 ```
 
-Controller 分包：`controller.admin/`（管理端 `/admin/**`）、`controller.user/`（用户端 `/user/**`）、`controller.notify/`（支付回调）
+## 管理端前端架构
 
-## 管理端前端 (Vue 3) 架构
+见 README.md 项目结构章节，核心特点：
+- Vue 3.5 + TypeScript 5.6 + Vite 6 + Element Plus 2.9 + Tailwind CSS 3.4
+- 品牌色深蓝 `#1a56db`，强调色琥珀 `#f59e0b`
+- 暗色模式 `html.dark` CSS 全覆盖
+- 登录页 Canvas 粒子动画
 
-### 目录 (`front/project-suda-admin-vue3/src/`)
-
-```
-src/
-├── api/          → Axios 实例 + modules/（按业务拆分）+ types/（ApiResponse、PageResult）
-├── components/   → layout/（Sidebar/Navbar/Breadcrumb）+ StatCard + EmptyState + ImageUpload
-├── composables/  → usePagination、useChart、useTheme
-├── layouts/      → DefaultLayout.vue
-├── router/       → routes.ts + guards.ts（NProgress + token 守卫）
-├── stores/       → Pinia：app.ts（主题/侧边栏/isFirstEnter）+ user.ts（token/登录）
-├── styles/       → tailwind.css + index.scss + element-override.scss（含 html.dark 全覆盖）
-├── utils/        → cookies.ts、auth.ts、date.ts（dayjs）
-└── views/        → login/ dashboard/ order/ dish/ setmeal/ category/ employee/ statistics/ message/ error/ client-login/
-```
+## 小程序端架构
 
 ### 技术栈
+- **框架**: Uni-app (Vue 2) + Vuex，HBuilderX 管理，编译为微信小程序
+- **样式**: SCSS，`rpx` 单位系统（750rpx 设计稿）
+- **无 npm 依赖**：不使用 `package.json`，所有依赖来自 HBuilderX IDE 工具链
 
-Vue 3.5 + TypeScript 5.6 + Vite 6 + Element Plus 2.9 + Tailwind CSS 3.4 + Pinia 2 + Vue Router 4 + Axios 1.x + ECharts 5
+### 目录结构（重构后）
 
-### 认证
+```
+front/mp-weixin/project-rjwm-weixin-uniapp/
+├── pages/
+│   ├── api/api.js           → 所有 API 接口定义（含 AI 相关）
+│   ├── index/index.*        → 首页：分类浏览 + 菜品列表 + 购物车
+│   ├── ai/index.vue         → AI 聊天页：SSE 流式对话 + 智能点餐
+│   ├── my/my.vue            → 个人中心：地址管理、历史订单
+│   ├── order/index.*        → 确认订单页
+│   ├── order/success.vue    → 下单成功页
+│   ├── historyOrder/        → 历史订单（分页）
+│   ├── address/address.vue  → 地址列表
+│   ├── addOrEditAddress/    → 新增/编辑地址
+│   ├── nonet/index.vue      → 无网络页
+│   └── common/
+│       ├── Navbar/          → 自定义导航栏组件（首页+AI页使用）
+│       └── simple-address/  → 省市区三级联动选择器
+├── components/
+│   ├── app-loading/         → 全屏加载遮罩
+│   ├── app-empty/           → 空状态插画 + 提示文字
+│   ├── app-skeleton/        → 骨架屏（菜品列表/分类/卡片/文本）
+│   ├── dish-card/           → 菜品卡片（图片+信息+加减按钮）
+│   ├── chat-bubble/         → AI 聊天气泡（用户蓝底/AI白底灰边）
+│   ├── chat-input/          → AI 聊天输入区
+│   └── reach-bottom/        → 上拉加载更多指示器
+├── utils/
+│   ├── env.js               → API baseUrl（localhost:8080）
+│   ├── request.js           → HTTP 请求封装（JWT authentication header）
+│   └── stream.js            → SSE 流式请求（wx.request + enableChunked）
+├── store/index.js           → Vuex（含 AI 会话状态）
+├── pages.json               → 路由 + TabBar 配置
+├── uni.scss                 → 全局设计 Token（品牌色、间距、圆角、动画）
+├── App.vue                  → 全局样式 + 动画 keyframes
+└── manifest.json            → 应用配置（AppID 等）
+```
 
-- 登录：POST `/employee/login` → `{ code, data: { token, id, userName, name } }`
-- Token 存储在 cookie `token`，请求头 `token: <jwt>`
-- 路由守卫：无 token → 重定向 `/login`
+### TabBar 导航（3 个 Tab）
+| Tab | 页面 | 说明 |
+|-----|------|------|
+| 🏠 首页 | `pages/index/index` | 分类浏览 + 菜品列表 + 购物车弹窗 |
+| 🤖 AI小速 | `pages/ai/index` | SSE 流式 AI 对话 + 智能点餐 |
+| 👤 我的 | `pages/my/my` | 个人中心 + 地址 + 历史订单 |
 
-### API 响应规范
+### 设计系统（与管理端统一）
 
-- `Result<T>`：`code=1` 成功，`code=0` 失败
-- `PageResult`：`{ total, records }`
-
-### 主题
-
-- 品牌色：深蓝 `#1a56db`，强调色 `#d32f2f`（登录按钮），辅助色 `#f59e0b`
-- 深色模式：`html.dark` CSS 全覆盖，Element Plus 组件 + Tailwind 工具类 + 页面级 scoped
-- 登录页 Canvas 粒子：卡片为波源，250 粒子涟漪扩散，浅蓝→深蓝渐变
-
-### 设计原则
-
-- `<script setup lang="ts">` 风格
-- 暗色模式 `html.dark` 下零白色残留
-- 登录成功 → 侧边栏菜单逐项飞入动画（`@keyframes flyInFromCenter`）
-- 删除权限由 `VITE_DELETE_PERMISSIONS` 环境变量控制
+| Token | 值 | 用途 |
+|-------|-----|------|
+| 品牌主色 | `#1a56db` | 导航栏、按钮、选中态、强调 |
+| 品牌深色 | `#1e40af` | 按钮按下态 |
+| 品牌浅蓝 | `#eff6ff` / `#dbeafe` | 卡片浅蓝底、选中背景 |
+| 强调色 | `#f59e0b` | 价格颜色、标签 |
+| 成功绿 | `#10b981` | 订单完成 |
+| 危险红 | `#ef4444` | 删除、角标 |
+| 页面背景 | `#f3f4f7` | 全局底色 |
+| 卡片背景 | `#fff` | 卡片、列表项 |
+| 卡片阴影 | `0 4rpx 24rpx rgba(0,0,0,0.06)` | |
+| 卡片圆角 | `16rpx` | |
+| 动画缓动 | `cubic-bezier(0.4, 0, 0.2, 1)` | 弹窗/过渡 |
+| 导航栏渐变 | `linear-gradient(135deg, #1e3a8a, #1a56db)` | |
 
 ## 核心架构模式（后端）
 
 ### JWT 双通道认证
 
-- **管理端**：Header `token`，密钥 `admin-secret-key` → `JwtTokenAdminInterceptor`
-- **用户端**：Header `authentication`，密钥 `user-secret-key` → `JwtTokenUserInterceptor`
+- **管理端**：Header `token`，密钥 `admin-secret-key: kamten` → `JwtTokenAdminInterceptor`
+- **用户端**：Header `authentication`，密钥 `user-secret-key: itheima` → `JwtTokenUserInterceptor`
 
-拦截器校验通过 → `BaseContext.setCurrentId()`（ThreadLocal）→ Service 通过 `BaseContext.getCurrentId()` 获取。
+### AI 集成（Spring AI + DeepSeek）
 
-### AOP 自动填充
+**关键文件**：
+- `com.suda.AI.config.SpringAIConfig` — ChatClient 配置，16 个 FunctionCallback 注册
+- `com.suda.AI.tools.UserAITools` — 时间工具（getCurrentDate/getCurrentDateTime/getTimeContext）
+- `com.suda.AI.tools.DishTools` — 菜品查询工具（搜索/详情/分类/热门/价格筛选）
+- `com.suda.AI.tools.RecommendTools` — 智能推荐工具
+- `com.suda.AI.tools.CartTools` — 购物车操作工具
+- `com.suda.service.impl.UserAIServiceImpl` — 用户 AI 服务实现
 
-Mapper 方法加 `@AutoFill(OperationType.INSERT/UPDATE)` → `AutiFillAspect` 反射调用实体的 `setCreateTime/createUser/updateTime/updateUser`。
+**架构要点**：
+- ChatClient 用 `List<FunctionCallback>` 自动收集所有 Bean，新增工具只需加 `@Bean` 即可自动生效
+- AI 会话存储在 Redis：key `ai:session:user:{userId}`，TTL 2 天，最多 50 轮
+- System Prompt 中 AI 名叫"小速"，遵循"推荐→询问→确认→操作"流程
 
-### 全局异常
+**用户端 AI API**：
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/user/ai/chat` | 同步对话 |
+| POST | `/user/ai/chat/stream` | SSE 流式对话（120s 超时） |
+| GET | `/user/ai/cart/status` | 获取购物车状态 |
+| DELETE | `/user/ai/history/{sessionId}` | 清空对话历史 |
 
-`GlobalExceptionHandler`：`BaseException` + 11 子类 → `Result.error(msg)`；`SQLIntegrityConstraintViolationException` → 解析 `Duplicate entry` 返回友好提示。
+### 小程序 SSE 流式请求
 
-### 缓存
+微信小程序通过 `wx.request({ enableChunked: true })` 实现 SSE 流式读取，封装在 `utils/stream.js`。要求基础库 ≥ 2.20.1。
 
-1. Spring Cache（套餐）`@Cacheable(key="#categoryId")` / `@CacheEvict`
-2. RedisTemplate（菜品）key `dish_{categoryId}`，批量清除 `redisTemplate.keys("dish_*")` + `delete`
+## ⚠️ 常见陷阱（开发时必须注意）
 
-### WebSocket
+### 1. Vue 2 中 `mapState` 必须放在 `computed` 里，不能放在 `methods` 里
 
-`@ServerEndpoint("/ws/{sid}")`，静态 `Map<String, Session>`，`sendToAllClient` 群发来单/催单通知。
+```javascript
+// ❌ 错误 — 会报 "[Vue warn]: Computed property was assigned to but it has no setter"
+methods: {
+  ...mapState(['orderListData', 'token']),
+}
 
-### 定时任务
+// ✅ 正确
+computed: {
+  ...mapState(['orderListData', 'token']),
+}
+```
 
-- `0 * * * * ?`：每分钟取消超时未付订单（>15分钟）
-- `0 0 1 * * ?`：每天凌晨 1 点完成派送中订单（>1小时）
+### 2. Java 字符串里的中文双引号会导致编译失败
+
+```java
+// ❌ 错误 — "今天" 中的引号被当成字符串结束符
+.description("...不知道"今天"是哪一天...")
+
+// ✅ 正确 — 用单引号或转义
+.description("...不知道'今天'是哪一天...")
+```
+
+### 3. Spring 注入多个同类型 Bean 的坑
+
+```java
+// ❌ 风险 — 16 个 FunctionCallback 参数全靠参数名匹配 Bean 名，依赖 -parameters 编译标志
+public ChatClient chatClient(..., FunctionCallback a, FunctionCallback b, ...)
+
+// ✅ 安全 — 用 List<T> 自动收集所有同类型 Bean
+public ChatClient chatClient(..., List<FunctionCallback> functionCallbacks)
+```
+
+### 4. Redis 端口
+
+本地 Redis 端口是 **6380**（不是默认的 6379），密码 `123456`，database `1`。
+
+### 5. HBuilderX 运行小程序
+
+Uni-app 项目无 `package.json`，必须在 HBuilderX 中打开并运行。修改代码后直接在 HBuilderX 中重新编译运行即可看到效果。
+
+### 6. 小程序 rpx 单位
+
+所有尺寸用 `rpx`，基于 750rpx 设计稿。1rpx = 屏幕宽度/750。从管理端 px 值转换时，通常乘以 2 得到 rpx（如 `16px → 32rpx`）。

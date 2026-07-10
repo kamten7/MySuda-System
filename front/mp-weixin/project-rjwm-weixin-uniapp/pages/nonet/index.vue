@@ -1,70 +1,73 @@
 <template>
-	<view class="nonet_content">
-		<view class="navBar">
-			<view class="leftNav" @click="goback()">
-				<image class="back" src="../../static/btn_back.png" mode=""></image>
+	<view class="nonet-page">
+		<view class="nonet-content">
+			<view class="nonet-icon-wrap">
+				<text class="nonet-emoji">📡</text>
 			</view>
-			<view class="centerNav">
-				{{tableInfo.storeName}}
-			</view>
+			<view class="nonet-title">网络无法连接</view>
+			<view class="nonet-desc">请检查网络设置后重试</view>
+			<view class="nonet-btn" @click="reload">点击刷新</view>
 		</view>
-		<view class="success_info">
-			<image class="success_icon" src="../../static/noNet.png" mode=""></image>
-			<view class="success_title">
-				网络无法连接
-			</view>
-			<view class="go_dish" @click="goIndex()">
-				点击刷新
-			</view>
-		</view>
-	</view>	
+	</view>
 </template>
+
 <script>
-	import {mapState, mapMutations, mapActions} from 'vuex'
-	export default {
-		computed:{
-			tableInfo:function(){
-				return this.shopInfo()
-			}
-		},
-		methods: {
-			...mapState(['shopInfo']),
-			goIndex(){
-				uni.navigateTo({url: '/pages/index/index'})
-			}
+export default {
+	methods: {
+		reload () {
+			uni.switchTab({ url: '/pages/index/index' })
 		}
 	}
+}
 </script>
-<style src="./../common/Navbar/navbar.scss" lang="scss" scoped></style>
+
 <style lang="scss" scoped>
-	.nonet_content{
-		padding-top: 260rpx;
-		.success_info{
-			text-align: center;
-			.success_icon{
-				width: 300rpx;
-				height: 300rpx;
-				text-align: center;
-			}
-			.success_title{
-				font-size: 48rpx;
-			}
-			.success_desc{
-				font-size: 32rpx;
-				margin-bottom:40rpx;
-				color:#818693;
-			}
-			.go_dish{
-				position: relative;
-				font-size: 30rpx;
-				margin: 0 auto;
-				width: 248rpx;
-				line-height: 72rpx;
-				margin-top: 20rpx;
-				background: linear-gradient(144deg,#ffda05 18%, #ffb302 80%);
-				border-radius: 36rpx;
-			}
-		}
-	}
+.nonet-page {
+	min-height: 100vh;
+	background: $page-bg;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.nonet-content { text-align: center; padding: 40rpx; }
+
+.nonet-icon-wrap {
+	width: 160rpx;
+	height: 160rpx;
+	border-radius: 50%;
+	background: #f3f4f7;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 24rpx;
+
+	.nonet-emoji { font-size: 72rpx; }
+}
+
+.nonet-title {
+	font-size: 36rpx;
+	font-weight: 600;
+	color: $text-primary;
+	margin-bottom: 8rpx;
+}
+
+.nonet-desc {
+	font-size: $font-sm;
+	color: $text-tertiary;
+	margin-bottom: 40rpx;
+}
+
+.nonet-btn {
+	display: inline-block;
+	padding: 20rpx 56rpx;
+	background: linear-gradient(135deg, $brand-primary, $brand-primary-light);
+	color: #fff;
+	font-size: $font-md;
+	font-weight: 600;
+	border-radius: $radius-round;
+	box-shadow: 0 4rpx 16rpx rgba($brand-primary, 0.3);
+
+	&:active { transform: scale(0.95); }
+}
 </style>
- 

@@ -1,62 +1,75 @@
 .navBar {
-  position: fixed;
-  display: flex;
-  // z-index: 9999;
-  top: 0;
-  left: 0;
-  height: 160rpx;
-  width: 100vw;
-  // padding-top: var(--status-bar-height);
-  box-sizing: border-box;
-  height: 304rpx;
-  opacity: 1;
-  background: linear-gradient(
-    184deg,
-    #E94E3C 25%,
-    #E9793C 96%
-  );
-  /* #ifdef H5 */
-  padding-top: 20rpx;
-  /* #endif */
-  .leftNav {
-    .back {
-      width: 88rpx;
-      height: 88rpx;
-    }
-  }
-  .centerNav {
-    width: calc(100vw - 176rpx);
-    text-align: center;
-    line-height: 88rpx;
-    font-size: 36rpx;
-    color: #fff;
-  }
-  .logo {
-    height: 66rpx;
-    width: 184rpx;
-  }
-
-  .test_image {
-    height: 56rpx;
-    width: 56rpx;
-  }
-  .person-box{
-    position: fixed;
-    left: 38rpx;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-  }
-  .person-title{
-    flex: 1;
-    height: 36rpx;
-    font-size: 26rpx;
-    font-family: PingFangSC, PingFangSC-Medium;
-    font-weight: 500;
-    text-align: left;
-    color: #ffffff;
-    line-height: 36rpx;
-    letter-spacing: 0px;
-    margin-left: 14rpx;
-  }
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 999;
+	background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 100%);
+	box-shadow: 0 4rpx 20rpx rgba(#1a56db, 0.25);
 }
+
+.navBar-inner {
+	height: 88rpx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 28rpx;
+}
+
+/* 品牌 */
+.navBar-brand {
+	display: flex;
+	align-items: center;
+	gap: 12rpx;
+}
+
+.brand-logo {
+	width: 52rpx;
+	height: 52rpx;
+	border-radius: 12rpx;
+	background: rgba(255,255,255,0.2);
+}
+
+.brand-name {
+	font-size: 34rpx;
+	font-weight: 700;
+	color: #ffffff;
+	letter-spacing: 1rpx;
+}
+
+/* 购物车图标 */
+.navBar-cart {
+	position: relative;
+	width: 64rpx;
+	height: 64rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	.cart-icon {
+		font-size: 36rpx;
+	}
+
+	.cart-badge {
+		position: absolute;
+		top: 0;
+		right: 0;
+		min-width: 32rpx;
+		height: 32rpx;
+		line-height: 32rpx;
+		text-align: center;
+		background: #ef4444;
+		color: #fff;
+		font-size: 20rpx;
+		font-weight: 600;
+		border-radius: 16rpx;
+		padding: 0 8rpx;
+		border: 2rpx solid #fff;
+	}
+}
+
+/* #ifdef H5 */
+.navBar {
+	padding-top: 20rpx;
+}
+/* #endif */

@@ -13,102 +13,153 @@
 </script>
 
 <style>
-	/*每个页面公共css */
-	/* #ifndef APP-PLUS-NVUE */
-	    /* uni.css - 通用组件、模板样式库，可以当作一套ui库应用 */
-/* 	    @import './common/uni.css'; */
-	
-		/* H5 兼容 pc 所需 */
-		/* #ifdef H5 */
-		@media screen and (min-width: 768px) {
-			body{
-				overflow-y: scroll;
-			}
+	/* ===== 全局基础样式 ===== */
+	page {
+		background-color: #f3f4f7;
+		height: 100%;
+		font-size: 28rpx;
+		line-height: 1.6;
+		font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+		color: #333333;
+	}
+
+	uni-page-body {
+		background-color: #f3f4f7 !important;
+		min-height: 100% !important;
+		height: auto !important;
+	}
+
+	/* ===== 全局过渡动画 ===== */
+
+	/* 页面进入动画 */
+	.page-fade-in {
+		animation: pageFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+	}
+
+	@keyframes pageFadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(20rpx);
 		}
-	
-		 /* 顶栏通栏样式 */
-		/* .uni-top-window {
-		    left: 0;
-		    right: 0;
-		} */
-	
-		uni-page-body {
-			background-color: #FFF8EC !important;
-			min-height: 100% !important;
-			height: auto !important;
+		to {
+			opacity: 1;
+			transform: translateY(0);
 		}
-	
-		.uni-top-window uni-tabbar .uni-tabbar {
-			background-color: #fff !important;
+	}
+
+	/* 弹窗动画 */
+	.popup-slide-up {
+		animation: popupSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+	}
+
+	@keyframes popupSlideUp {
+		from {
+			opacity: 0;
+			transform: translateY(100%);
 		}
-	
-		.uni-app--showleftwindow .hideOnPc {
-			display: none !important;
+		to {
+			opacity: 1;
+			transform: translateY(0);
 		}
-		/* #endif */
-	
-	    /* 以下样式用于 hello uni-app 演示所需 */
-	    page {
-	        background-color: #FFF8EC;
-	        height: 100%;
-	        font-size: 28rpx;
-	        line-height: 1.8;
-			/* overflow: hidden; */
-	    }
-		.fix-pc-padding {
-			padding: 0 100rpx;
+	}
+
+	/* 遮罩淡入 */
+	.mask-fade-in {
+		animation: maskFadeIn 0.25s ease both;
+	}
+
+	@keyframes maskFadeIn {
+		from { opacity: 0; }
+		to { opacity: 1; }
+	}
+
+	/* 列表错落入场 */
+	@keyframes staggerItemIn {
+		from {
+			opacity: 0;
+			transform: translateY(30rpx);
 		}
-	    .uni-header-logo {
-	        padding: 30rpx;
-	        flex-direction: column;
-	        justify-content: center;
-	        align-items: center;
-	        margin-top: 10rpx;
-	    }
-	
-	    .uni-header-image {
-	        width: 200rpx;
-	        height: 200rpx;
-	    }
-	
-	    .uni-hello-text {
-	        color: #7A7E83;
-	    }
-	
-	    .uni-hello-addfile {
-	        text-align: center;
-	        line-height: 300rpx;
-	        background: #FFF;
-	        padding: 50rpx;
-	        margin-top: 20rpx;
-	        font-size: 38rpx;
-	        color: #808080;
-	    }
-	    /* #endif*/
-		
-		
-		
-		
-	/*checkbox 选项框大小  */
-	/* uni-checkbox .uni-checkbox-input {
-		width: 30rpx !important;
-		height: 30rpx !important; 
-	} */
-	/*checkbox选中后样式  */
-	/* uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked {
-		background: #3D7EFF;
-		border-color:#3D7EFF;
-	} */
-	/*checkbox选中后图标样式  */
-	/* uni-checkbox .uni-checkbox-input.uni-checkbox-input-checked::before {
-		width: 20rpx;
-		height: 20rpx;  
-		line-height: 20rpx;
-		text-align: center;
-		font-size: 18rpx;
-		color: #fff;
-		background: transparent;
-		transform: translate(-70%, -50%) scale(1);
-		-webkit-transform: translate(-70%, -50%) scale(1);
-	} */
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.stagger-item {
+		animation: staggerItemIn 0.35s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+	}
+
+	/* 骨架屏闪烁 */
+	@keyframes skeletonShimmer {
+		0% { background-position: 200% 0; }
+		100% { background-position: -200% 0; }
+	}
+
+	/* 脉冲动画 */
+	@keyframes pulse {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.5; }
+	}
+
+	/* ===== 通用工具类 ===== */
+
+	/* 通用遮罩 */
+	.pop-mask {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.45);
+		z-index: 9998;
+	}
+
+	/* 全局 loading 动画 */
+	.loading-gif {
+		width: 80rpx;
+		height: 80rpx;
+	}
+
+	/* placeholder 全局样式 */
+	.placeholder-style {
+		color: #bdbdbd;
+		font-size: 28rpx;
+	}
+
+	/* 安全区域底部 */
+	.safe-bottom {
+		padding-bottom: constant(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+
+	/* ===== 全局按钮按下反馈 ===== */
+	.touch-scale:active {
+		transform: scale(0.95);
+		transition: transform 0.15s ease;
+	}
+
+	.touch-opacity:active {
+		opacity: 0.7;
+		transition: opacity 0.15s ease;
+	}
+
+	/* ===== 兼容旧代码 — 保留 .pop_mask 类名 ===== */
+	.pop_mask {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.45);
+		z-index: 9998;
+	}
+
+	/* ===== PC 兼容 ===== */
+	/* #ifdef H5 */
+	@media screen and (min-width: 768px) {
+		body {
+			overflow-y: scroll;
+		}
+	}
+	/* #endif */
 </style>

@@ -50,3 +50,4 @@ application-prod.yml
 
 # === Deprecated (removed from tracking) ===
 front/project-suda-admin-vue-ts/
+sky_take_out_dump.sql

@@ -1,80 +1,69 @@
-import navBar from '../common/Navbar/navbar.vue'
+import NavBar from '../common/Navbar/navbar.vue'
+import DishCard from '@/components/dish-card/dish-card.vue'
+import AppEmpty from '@/components/app-empty/app-empty.vue'
+import AppLoading from '@/components/app-loading/app-loading.vue'
 import {
-		userLogin,
-		getCategoryList,
-		dishListByCategoryId,
-		querySetmeaList,
-		getShoppingCartList,
-		newAddShoppingCartAdd,
-		newShoppingCartSub,
-		delShoppingCart,
-		querySetmealDishById
-	} from '../api/api.js'
-import {mapState, mapMutations, mapActions} from 'vuex'
+	userLogin,
+	getCategoryList,
+	dishListByCategoryId,
+	querySetmeaList,
+	getShoppingCartList,
+	newAddShoppingCartAdd,
+	newShoppingCartSub,
+	delShoppingCart,
+	querySetmealDishById
+} from '../api/api.js'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
-	data () {
+	data() {
 		return {
-			title: 'Hello',
-			openOrderCartList: false,
+			loading: true,
 			typeListData: [],
 			dishListData: [],
 			dishListItems: [],
-			dishDetailes: {},
-			openDetailPop: false,
-			openMoreNormPop: false,
-			moreNormDataes: null,
-			tableInfo:null,
-			moreNormDishdata:null,
-			moreNormdata:null,
-			dishMealData:null,
-			openTablePeoPleNumber: 1,
-			orderData: 0,
 			typeIndex: 0,
-			openTablePop: false,
+			openOrderCartList: false,
+			openDetailPop: false,
+			dishDetailes: {},
+			dishMealData: null,
+			openMoreNormPop: false,
+			moreNormDishdata: null,
+			moreNormdata: null,
 			flavorDataes: [],
 			orderDishNumber: 0,
 			orderDishPrice: 0,
-			params: {
-				shopId: 'f3deb',
-				storeId: '1282344676983062530',
-				tableId: '1282346960773238786'
-			 },
-			rightIdAndType: {}
+			rightIdAndType: {},
+			navbarH: 0
 		}
 	},
 	computed: {
-		orderListDataes: function () {
-			return this.orderListData()
+		...mapState(['orderListData', 'lodding', 'token']),
+		orderListDataes() {
+			return this.orderListData || []
 		},
-		loaddingSt: function () {
-			return this.lodding()
-		},
-		orderAndUserInfo: function () {
-			let orderData = []
-			Array.isArray(this.orderListDataes) && this.orderListDataes.forEach((n,i) => {
-				let userData = {}
-				userData.nickName = n.name ?? ''
-				userData.avatarUrl = n.image ?? ''
-				userData.dishList = [n]
-				const num = orderData.findIndex(o => o.nickName == userData.nickName)
-				if (num != -1) {
-					orderData[num].dishList.push(n)
-				} else {
-					orderData.push(userData)
-				}
-			})
-			return orderData
-		},
-		ht: function () {
-			return uni.getMenuButtonBoundingClientRect().top + uni.getMenuButtonBoundingClientRect().height + 7
+		loaddingSt() {
+			return this.lodding
 		}
 	},
-	components: { navBar },
-	onLoad (options) {
-		uni.onNetworkStatusChange(function(res) {
+	components: {
+		NavBar,
+		DishCard,
+		AppEmpty,
+		AppLoading
+	},
+	onLoad(options) {
+		// 计算导航栏高度（rpx转px的近似值）
+		try {
+			const res = uni.getMenuButtonBoundingClientRect()
+			this.navbarH = (res.top + res.height + 7) * 2 // 转rpx
+		} catch (e) {
+			this.navbarH = 160
+		}
+
+		uni.onNetworkStatusChange(function (res) {
 			if (res.isConnected == false) {
-				uni.navigateTo({url: '/pages/nonet/index'})
+				uni.navigateTo({ url: '/pages/nonet/index' })
 			}
 		})
 		if (options) {
@@ -83,13 +72,22 @@ export default {
 			}
 		}
 	},
-	onShow () {
-		this.token() && this.init()
+	onShow() {
+		// 导航栏高度
+		try {
+			const res = uni.getMenuButtonBoundingClientRect()
+			this.navbarH = (res.top + res.height + 7) * 2
+		} catch (e) {
+			this.navbarH = 160
+		}
+		if (this.token) {
+			this.init()
+		}
 	},
 	methods: {
-		...mapMutations(['setShopInfo', 'initdishListMut', 'setStoreInfo', 'setBaseUserInfo', 'setLodding', 'setToken']),
-		...mapState(['shopInfo', 'orderListData', 'baseUserInfo', 'lodding', 'token']),
-		loginSync () {
+		...mapMutations(['setShopInfo', 'initdishListMut', 'setStoreInfo', 'setBaseUserInfo', 'setLodding', 'setToken', 'setCartCount']),
+
+		loginSync() {
 			return new Promise((resolve, reject) => {
 				uni.login({
 					success: (loginRes) => {
@@ -100,13 +98,12 @@ export default {
 				})
 			})
 		},
-		getData () {
-			let res = wx.getMenuButtonBoundingClientRect()
-			let _this = this
-			this.selectHeight = res.height
+
+		getData() {
+			const _this = this
 			uni.showModal({
 				title: '温馨提示',
-				content: '亲，授权微信登录后才能正点餐！',
+				content: '亲，授权微信登录后才能正常点餐！',
 				showCancel: false,
 				success(modalRes) {
 					if (modalRes.confirm) {
@@ -130,199 +127,203 @@ export default {
 			})
 		},
 
-		async init () {
-			getCategoryList().then(res => {
+		async init() {
+			this.loading = true
+			try {
+				const res = await getCategoryList()
 				if (res && res.code === 1) {
-					this.typeListData = [ ...res.data ]
-					if (res.data.length > 0){
-						this.getDishListDataes(res.data[this.typeIndex || 0])
+					this.typeListData = [...res.data]
+					if (res.data.length > 0) {
+						await this.getDishListDataes(res.data[this.typeIndex || 0])
 					}
 				}
-			})
-			this.getTableOrderDishListes()
+				await this.getTableOrderDishListes()
+			} catch (e) {
+				// 静默处理
+			}
+			this.loading = false
 		},
-		async getDishListDataes (params, index) {
-			console.log('=-=-=-=-=-=-=getDishListDataes-=-params=-',params)
-			this.rightIdAndType = {}
+
+		async getDishListDataes(params, index) {
 			this.rightIdAndType = {
 				id: params.id,
 				type: params.type
 			}
-			const param = {categoryId: params.id,type: params.type, page: 1, pageSize: 1000,status:1}
-			if (params.type === 1) {
-				await dishListByCategoryId(param).then(res => {
+			const param = { categoryId: params.id, type: params.type, page: 1, pageSize: 1000, status: 1 }
+			try {
+				if (params.type === 1) {
+					const res = await dishListByCategoryId(param)
 					if (res && res.code === 1) {
-						this.dishListData = res.data && res.data.map((obj) => ({ ...obj, type: 1, newCardNumber: 0 }))
+						this.dishListData = res.data && res.data.map(obj => ({ ...obj, type: 1, dishNumber: 0 }))
 					}
-				}).catch(err => {
-				})
-			} else {
-				await querySetmeaList(param).then(success => {
-					if (success && success.code === 1) {
-						this.dishListData = success.data && success.data.map((obj) => ({ ...obj, type: 2, newCardNumber: 0 }))
+				} else {
+					const res = await querySetmeaList(param)
+					if (res && res.code === 1) {
+						this.dishListData = res.data && res.data.map(obj => ({ ...obj, type: 2, dishNumber: 0 }))
 					}
-				}).catch(err => {
-				})
+				}
+				this.typeIndex = index !== undefined ? index : this.typeIndex
+				this.setOrderNum()
+			} catch (err) {
+				// 静默处理
 			}
-			this.typeIndex = index
-			this.setOrderNum()
 		},
-		getNewImage (image) {
+
+		getNewImage(image) {
 			return image
 		},
-		async getTableOrderDishListes () {
-			await getShoppingCartList({}).then(res => {
+
+		async getTableOrderDishListes() {
+			try {
+				const res = await getShoppingCartList({})
 				if (res.code === 1) {
 					this.initdishListMut(res.data)
+					// 更新全局购物车数量
+					const count = res.data ? res.data.reduce((sum, item) => sum + (item.number || 0), 0) : 0
+					this.setCartCount(count)
 					this.computOrderInfo()
 				}
-			}).catch(err => {
-			})
+			} catch (err) {}
 		},
-		goOrder () {
-			uni.navigateTo({url: '/pages/order/index'})
+
+		goOrder() {
+			if (this.orderDishNumber === 0) return
+			uni.navigateTo({ url: '/pages/order/index' })
 		},
-		async addDishAction (item, form) {
-			console.log('this.flavorDataes',this.flavorDataes)
-			if(this.openMoreNormPop && (!this.flavorDataes || this.flavorDataes.length<=0) ){
-				uni.showToast({
-					title: '请选择规格',
-					icon: 'none',
-				})
+
+		async addDishAction(item, form) {
+			if (this.openMoreNormPop && (!this.flavorDataes || this.flavorDataes.length <= 0)) {
+				uni.showToast({ title: '请选择规格', icon: 'none' })
 				return false
-			}
-			console.log('-=-=-=addDishAction-=-=-')
-			if(this.orderListDataes && !this.orderListDataes.some(n => n.id == item.dishId) && this.flavorDataes.length > 0) {
-				item.flavorRemark = JSON.stringify(this.flavorDataes)
 			}
 			let params = {
 				amount: item.price,
-				dishFlavor: this.flavorDataes.join(','),
-				number: 1 || item.dishNumber,
+				dishFlavor: this.flavorDataes.length > 0 ? this.flavorDataes.join(',') : '',
+				number: 1,
 				name: item.name,
 				image: item.image
 			}
 			if (item.type === 1 || item.dishId !== null) {
-				params = {
-					...params,
-					dishId: form === '购物车' ? item.dishId : item.id
-				}
+				params = { ...params, dishId: form === '购物车' ? item.dishId : item.id }
 			} else {
-				params = {
-					...params,
-					setmealId: form === '购物车' ? item.setmealId : item.id
-				}
+				params = { ...params, setmealId: form === '购物车' ? item.setmealId : item.id }
 			}
-			newAddShoppingCartAdd(params).then(res => {
+			try {
+				const res = await newAddShoppingCartAdd(params)
 				if (res.code === 1) {
 					this.openDetailPop = false
 					this.openMoreNormPop = false
-					this.getTableOrderDishListes()
-					this.getDishListDataes(this.rightIdAndType)
+					this.flavorDataes.splice(0)
+					await this.getTableOrderDishListes()
+					await this.getDishListDataes(this.rightIdAndType)
 				}
-			}).catch(err => {
-			})
+			} catch (err) {}
 		},
-		async redDishAction (item, form) {
+
+		async redDishAction(item, form) {
 			let params = {}
 			if (item.type === 1 || item.dishId !== null) {
-				params = {
-					...params,
-					dishId: form === '购物车' ? item.dishId : item.id
-				}
+				params = { dishId: form === '购物车' ? item.dishId : item.id }
 			} else {
-				params = {
-					...params,
-					setmealId: form === '购物车' ? item.setmealId : item.id
-				}
+				params = { setmealId: form === '购物车' ? item.setmealId : item.id }
 			}
-			await newShoppingCartSub(params).then(res => {
+			try {
+				const res = await newShoppingCartSub(params)
 				if (res.code === 1) {
-					this.getTableOrderDishListes()
-					this.getDishListDataes(this.rightIdAndType)
+					await this.getTableOrderDishListes()
+					await this.getDishListDataes(this.rightIdAndType)
 				}
-			}).catch(err => {
-			})
+			} catch (err) {}
 		},
-		clearCardOrder () {
+
+		clearCardOrder() {
 			delShoppingCart().then(res => {
 				this.openOrderCartList = false
 				this.getTableOrderDishListes()
 				this.getDishListDataes(this.rightIdAndType)
-			}).catch(err => {
-			})
+			}).catch(err => {})
 		},
-		openDetailHandle (item) {
+
+		openDetailHandle(item) {
 			this.dishDetailes = item
 			if (item.type === 2) {
 				querySetmealDishById({ id: item.id }).then(res => {
-					console.log(res)
 					if (res.code === 1) {
 						this.openDetailPop = true
 						this.dishMealData = res.data
 					}
-				}).catch(err => {
-				})
+				}).catch(err => {})
 			} else {
 				this.openDetailPop = true
 			}
 		},
-		moreNormDataesHandle (item) {
+
+		moreNormDataesHandle(item) {
 			this.flavorDataes.splice(0)
 			this.moreNormDishdata = item
 			this.openMoreNormPop = true
 			this.moreNormdata = item.flavors.map(obj => ({ ...obj, value: JSON.parse(obj.value) }))
-			this.moreNormdata.forEach((item)=>{
-				if(item.value && item.value.length>0){
+			this.moreNormdata.forEach(item => {
+				if (item.value && item.value.length > 0) {
 					this.flavorDataes.push(item.value[0])
 				}
 			})
 		},
-		checkMoreNormPop (obj, item) {
+
+		checkMoreNormPop(obj, item) {
 			let ind
 			let findst = obj.some(n => {
 				ind = this.flavorDataes.findIndex(o => o == n)
 				return ind != -1
 			})
 			const num = this.flavorDataes.findIndex(it => it == item)
-			if (num == -1 && !findst){
+			if (num == -1 && !findst) {
 				this.flavorDataes.push(item)
-			} else if(findst) {
+			} else if (findst) {
 				this.flavorDataes.splice(ind, 1)
 				this.flavorDataes.push(item)
 			} else {
 				this.flavorDataes.splice(num, 1)
 			}
 		},
-		closeMoreNorm (moreNormDishdata) {
+
+		closeMoreNorm(moreNormDishdata) {
 			this.flavorDataes.splice(0, this.flavorDataes.length)
 			this.openMoreNormPop = false
 		},
-		computOrderInfo () {
-			let oriData = this.orderListDataes
-			this.orderDishNumber = this.orderDishPrice = 0
-			oriData.map((n, i) => {
-				this.orderDishNumber += n.number
-				this.orderDishPrice += n.number * n.amount
-			})
+
+		computOrderInfo() {
+			const oriData = this.orderListDataes
+			this.orderDishNumber = 0
+			this.orderDishPrice = 0
+			if (oriData && oriData.length) {
+				oriData.forEach(n => {
+					this.orderDishNumber += n.number
+					this.orderDishPrice += n.number * n.amount
+				})
+			}
 		},
-		setOrderNum () {
-			let ODate = this.dishListData
-			let CData = this.orderListDataes
-			ODate && ODate.map((obj, index) => {
-				obj.dishNumber = 0
-				CData && CData.forEach((tg, ind) => {
-					if (obj.id === tg.dishId) {
-						obj.dishNumber = tg.number
+
+		setOrderNum() {
+			const ODate = this.dishListData
+			const CData = this.orderListDataes
+			if (ODate && ODate.length) {
+				ODate.forEach(obj => {
+					obj.dishNumber = 0
+					if (CData && CData.length) {
+						CData.forEach(tg => {
+							if (obj.id === tg.dishId) {
+								obj.dishNumber = tg.number
+							}
+						})
 					}
 				})
-			})
-			if (this.dishListItems.length == 0) {
+			}
+			if (this.dishListItems.length === 0) {
 				this.dishListItems = ODate
 			} else {
-				this.dishListItems.splice(0, this.dishListItems.length, ...ODate)
+				this.dishListItems.splice(0, this.dishListItems.length, ...(ODate || []))
 			}
-			console.log('-=-=-=-setOrderNum-=-=',this.dishListItems)
-		},
+		}
 	}
 }

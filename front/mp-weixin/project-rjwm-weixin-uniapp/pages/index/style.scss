@@ -1,854 +1,687 @@
-$min-font-color: #20232a;
-$desc-font-color: #818693;
+/* ===== 页面基础 ===== */
+.home-page {
+	height: 100vh;
+	background: $page-bg;
+	overflow: hidden;
+}
 
-.home_content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 160rpx;
-  position: relative;
-  /* #ifdef H5 */
-  // padding-top: 100rpx;
-  /* #endif */
+/* ===== 加载骨架屏 ===== */
+.home-loading {
+	padding-top: 180rpx;
+}
 
-  // .navBar {
-  // 	position: fixed;
-  // 	z-index: 99;
-  // 	top: 0;
-  // 	height: 160rpx;
-  // 	width: 100%;
-  // 	padding-top: var(--status-bar-height);
-  // 	padding-left: 20rpx;
-  // 	box-sizing: border-box;
-  // 	background: linear-gradient(90deg, #E94E3C, #E9793C);
-  // 	/* #ifdef H5 */
-  // 	padding-top: 20rpx;
-  // 	/* #endif */
-  // 	.leftNav{
-  // 		background: linear-gradient(90deg, #E94E3C, #E9793C);
-  // 	}
-  // 	.logo {
-  // 		height: 66rpx;
-  // 		width: 184rpx;
-  // 	}
-  // }
-  // .restaurant_info_box{
-  // 	position: relative;
-  // 	color: $min-font-color;
-  // 	width: 100%;
-  // 	height: 160rpx;
-  // 	background: linear-gradient(90deg, #E94E3C, #E9793C);
-  // 	.restaurant_info{
-  // 		position: absolute;
-  // 		z-index: 9;
-  // 		left: 30rpx;
-  // 		// transform: translateX(-50%);
-  // 		display: flex;
-  // 		width: calc(100% - 60rpx);
-  // 		// margin:0 auto;
-  // 		background: rgba(255,255,255,0.97);
-  // 		box-shadow: 0px 2px 5px 0px rgba(69,69,69,0.10);
-  // 		border-radius: 8px;
-  // 		padding: 40rpx;
-  // 		box-sizing: border-box;
-  // 		.left_info{
-  // 			flex: 1;
-  // 			.title{
-  // 				color: $min-font-color;
-  // 				font-size: 36rpx;
-  // 			}
-  // 			.position{
-  // 				color: $desc-font-color;
-  // 				font-size: 36rpx;
-  // 			}
-  // 		}
-  // 		.restaurant_logo{
-  // 			.restaurant_logo_img{
-  // 				display: block;
-  // 				width: 320rpx;
-  // 				height: 120rpx;
-  // 				border-radius: 16rpx;
-  // 			}
-  // 		}
-  // 	}
-  // }
-  // 展示悬浮盒子样式
-  .restaurant_info_box {
-    position: relative;
-    color: $min-font-color;
-    width: 100%;
-    // height: 236rpx;
-    // // height: 160rpx;
-    background: linear-gradient(
-      184deg,
-      rgba(0, 0, 0, 0.35) 25%,
-      rgba(51, 51, 51, 0) 96%
-    );
-    .restaurant_info {
-      position: absolute;
-      z-index: 9;
-      top: 10rpx;
-      left: 30rpx;
-      display: flex;
-      flex-direction: column;
-      width: calc(100% - 60rpx);
-      background: #FFFDF5;
-      box-shadow: 0px 4rpx 10rpx 0px rgba(69, 69, 69, 0.1);
-      border-radius: 16rpx;
-      padding: 14rpx 18rpx 18rpx 16rpx;
-      box-sizing: border-box;
-      // 上部
-      .info_top {
-        flex: 1;
-        display: flex;
-        padding-bottom: 10rpx;
-        border-bottom: 1px dashed #ebebeb;
-        .info_top_left {
-          margin-right: 20rpx;
-          padding-top: 10rpx;
-          box-sizing: border-box;
-          image {
-            width: 78rpx;
-            height: 78rpx;
-            background: #333333;
-            border-radius: 12rpx;
-            padding: 10rpx;
-            box-sizing: border-box;
-          }
-        }
-        .info_top_right {
-          flex: 1;
-          .right_title {
-            text {
-              font-size: 36rpx;
-              font-family: PingFangSC, PingFangSC-Medium;
-              font-weight: 500;
-              text-align: left;
-              color: #20232a;
-              line-height: 50rpx;
-            }
-          }
-          .right_details {
-            width: 100%;
-            display: flex;
-            .details_flex {
-              white-space: nowrap;
-              // 图片
-              .top_icon {
-                width: 28rpx;
-                height: 28rpx;
-                display: inline-block;
-                vertical-align: middle;
-                margin-bottom: 4rpx;
-                margin-right: 6rpx;
-              }
-              // 文本
-              .icon_text {
-                // font-size: 22rpx;
-                font-size: 24rpx;
-                font-family: PingFangSC, PingFangSC-Regular;
-                font-weight: 400;
-                text-align: center;
-                color: #333333;
-                line-height: 36rpx;
-                padding-right: 20rpx;
-              }
-            }
-            .test {
-              flex: 1;
-            }
-            .vertical-line {
-              display: inline-block;
-              width: 1px;
-              height: 20rpx;
-              line-height: 20rpx;
-              margin: 16rpx 10rpx;
-              background-color: #ccc;
-            }
-          }
-        }
-      }
-      // 下部
-      .info_bottom {
-        margin-top: 20rpx;
-        .word {
-          display: block;
-          font-size: 24rpx;
-          font-family: PingFangSC, PingFangSC-Regular;
-          font-weight: 400;
-          text-align: left;
-          color: #9b9b9b;
-          line-height: 34rpx;
-        }
-      }
-    }
-  }
-  // 结束
-  .restaurant_menu_list {
-    display: flex;
-    width: 100%;
-    height: calc(100vh - 260rpx);
-    margin-top: 135rpx;
-    .type_list {
-      background-color: #FFEFD6;
-      width: 200rpx;
-      padding-top: 140rpx;
-      box-sizing: border-box;
-      height: calc(100% - 0rpx);
-      position: relative;
-      .type_item {
-        line-height: 100rpx;
-        text-align: center;
-        font-family: PingFangSC, PingFangSC-Regular;
-        font-weight: 400;
-        color: #666666;
-      }
-      .active {
-        color: #333333;
-        background-color: #FFFDF5;
-        position: relative;
-        font-family: PingFangSC, PingFangSC-Medium;
-        font-weight: 500;
-        &::after,
-        &::before {
-          content: '';
-          display: block;
-          position: absolute;
-          height: 30rpx;
-          width: 200rpx;
-          bottom: -30rpx;
-          background-color: #FFFDF5;
-        }
-        &::after {
-          background-color: #FFEFD6;
-          border-radius: 0 15rpx 0 0;
-        }
-      }
-      .seize_seat {
-        width: 100%;
-        height: 160rpx;
-      }
-    }
-    .vegetable_order_list {
-      background-color: #FFFDF5;
-      padding-top: 140rpx;
-      box-sizing: border-box;
-      height: calc(100% - 0rpx);
-      flex: 1;
-      position: relative;
-      .type_item {
-        display: flex;
-        // margin: 20rpx 0;
-        padding-top: 20rpx;
-        .dish_img {
-          width: 172rpx;
-          margin: 0 30rpx;
-          .dish_img_url {
-            display: block;
-            width: 172rpx;
-            height: 172rpx;
-            border-radius: 8rpx;
-          }
-        }
-        .dish_info {
-          position: relative;
-          flex: 1;
-          .dish_name {
-            font-size: 32rpx;
-            font-family: PingFangSC, PingFangSC-Semibold;
-            font-weight: 600;
-            color: #333333;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: calc(100vw - 452rpx);
-          }
-          .dish_label,
-          .dish_num {
-            font-size: 22rpx;
-            line-height: 34rpx;
-            font-family: PingFangSC, PingFangSC-Regular;
-            font-weight: 400;
-            color: #666666;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            width: calc(100vw - 452rpx);
-          }
-          .dish_price {
-            height: 72rpx;
-            line-height: 72rpx;
-            font-size: 36rpx;
-            color: #e94e3c;
-            font-family: DIN, DIN-Medium;
-            font-weight: 500;
-            .ico {
-              font-size: 24rpx;
-            }
-          }
-          .dish_active {
-            position: absolute;
-            right: 20rpx;
-            bottom: 0rpx;
-            display: flex;
-            .dish_add,
-            .dish_red {
-              display: block;
-              width: 72rpx;
-              height: 72rpx;
-            }
-            .dish_number {
-              padding: 0 10rpx;
-              line-height: 72rpx;
-              font-size: 30rpx;
-              font-family: PingFangSC, PingFangSC-Medium;
-              font-weight: 500;
-            }
-          }
-          .dish_active_btn {
-            position: absolute;
-            right: 20rpx;
-            bottom: 15rpx;
-            display: flex;
-            .check_but {
-              width: 128rpx;
-              height: 48rpx;
-              line-height: 48rpx;
-              text-align: center;
-              opacity: 1;
-              background: #ffc200;
-              border-radius: 24rpx;
-              font-size: 12px;
-              font-family: PingFangSC, PingFangSC-Medium;
-              font-weight: 500;
-              color: #333333;
-            }
-          }
-        }
-      }
-      &::before {
-        // content: "";
-        // position: absolute;
-        // width: calc(100vw - 200rpx);
-        // height: 120rpx;
-        // z-index: 9;
-        // background: linear-gradient(
-        //   0deg,
-        //   rgba(255, 255, 255, 1) 10%,
-        //   rgba(255, 255, 255, 0)
-        // );
-        // bottom: 0px;
-        // left: 0px;
-      }
-      .seize_seat {
-        width: 100%;
-        height: 136rpx;
-      }
-    }
-    .no_dish {
-      flex: 1;
-      background-color: #FFFDF5;
-      color: #9b9b9b;
-      font-family: PingFangSC, PingFangSC-Regular;
-      font-weight: 400;
-      font-size: 26rpx;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
+.home-skeleton {
+	display: flex;
+	height: calc(100vh - 180rpx);
+}
 
-  .footer_order_buttom {
-    position: fixed;
-    display: flex;
-    bottom: 48rpx;
-    width: calc(100% - 60rpx);
-    height: 88rpx;
-    margin: 0 auto;
-    background: rgba(0, 0, 0, 0.9);
-    border-radius: 50rpx;
-    box-shadow: 0px 6rpx 10rpx 0px rgba(0, 0, 0, 0.25);
-    z-index: 9999;
-    padding: 0rpx 10rpx;
-    box-sizing: border-box;
-    .order_number {
-      position: relative;
-      width: 120rpx;
-      .order_number_icon {
-        position: absolute;
-        display: block;
-        width: 120rpx;
-        height: 118rpx;
-        left: 12rpx;
-        bottom: 0px;
-      }
-      .order_dish_num {
-        position: absolute;
-        display: inline-block;
-        z-index: 9;
-        // width: 36rpx;
-        min-width: 12rpx;
-        height: 36rpx;
-        line-height: 36rpx;
-        padding: 0 12rpx;
-        left: 92rpx;
-        font-size: 24rpx;
-        top: -8rpx;
-        // text-align: center;
-        border-radius: 20rpx;
-        background-color: #e94e3c;
-        color: #fff;
-        font-weight: 500;
-      }
-    }
-    .order_price {
-      flex: 1;
-      text-align: left;
-      color: #fff;
-      line-height: 88rpx;
-      padding-left: 34rpx;
-      box-sizing: border-box;
-      font-size: 36rpx;
-      font-family: DIN, DIN-Medium;
-      font-weight: 500;
-      .ico {
-        font-size: 24rpx;
-      }
-    }
-    .order_but {
-      background-color: #d8d8d8;
-      width: 204rpx;
-      height: 72rpx;
-      line-height: 72rpx;
-      border-radius: 72rpx;
-      color: #fff;
-      text-align: center;
-      margin-top: 8rpx;
-    }
-  }
-  .order_form {
-    .order_but {
-      font-family: PingFangSC, PingFangSC-Medium;
-      font-weight: 500;
-      color: #333333;
-      background: #ffc200;
-    }
-  }
-  .pop_mask {
-    position: fixed;
-    width: 100%;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    z-index: 10000;
-    background-color: rgba($color: #000000, $alpha: 0.4);
-    .pop {
-      width: 60%;
-      position: relative;
-      top: 40%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-50%);
-      background: #fff;
-      border-radius: 20rpx;
-      .open_table_cont {
-        padding-top: 60rpx;
-        .cont_tit {
-          font-size: 36rpx;
-          color: #20232a;
-          text-align: center;
-        }
-        .people_num_act {
-          display: flex;
-          width: 60%;
-          margin: 0 auto;
-          .red,
-          .add {
-            width: 112rpx;
-            height: 112rpx;
-          }
-          .people_num {
-            line-height: 112rpx;
-            flex: 1;
-            text-align: center;
-            font-size: 30rpx;
-            color: #20232a;
-          }
-        }
-      }
-      .butList {
-        background: #f7f7f7;
-        display: flex;
-        text-align: center;
-        border-radius: 20rpx;
-        .define {
-          flex: 1;
-          font-size: 36rpx;
-          line-height: 100rpx;
-        }
-        .cancel {
-          flex: 1;
-          font-size: 36rpx;
-          line-height: 100rpx;
-        }
-      }
-    }
-    .cart_pop {
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 60vh;
-      background-color: #fff;
-      border-radius: 20rpx 20rpx 0 0;
-      padding: 20rpx 30rpx 30rpx 30rpx;
-      box-sizing: border-box;
-      .top_title {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: solid 1px #ebeef5;
-        padding-bottom: 20rpx;
-        .tit {
-          font-size: 40rpx;
-          font-weight: bold;
-          color: #20232a;
-        }
-        .clear {
-          color: #999999;
-          font-size: 28rpx;
-          font-weight: 400;
-          display: flex;
-          align-items: center;
-          font-family: PingFangSC, PingFangSC-Regular;
+.skeleton-sidebar {
+	width: 180rpx;
+	padding: 20rpx;
+}
 
-          // position: relative;
-          // top: 14rpx;
-          .clear_icon {
-            // position: relative;
-            // top: 0rpx;
-            width: 30rpx;
-            height: 30rpx;
-            margin-right: 8rpx;
-          }
-          .clear-des{
-            height: 56rpx;
-            line-height: 56rpx;
-          }
-        }
-      }
-      .card_order_list {
-        background-color: #fff;
-        padding-top: 40rpx;
-        box-sizing: border-box;
-        height: calc(100% - 0rpx);
-        flex: 1;
-        position: relative;
-        .type_item_cont {
-          .user_info {
-            display: flex;
-            margin-bottom: 20rpx;
-            .user_avatar {
-              .user_avatar_icon {
-                width: 42rpx;
-                height: 42rpx;
-                border-radius: 42rpx;
-              }
-              margin-right: 20rpx;
-            }
-            .user_name {
-              color: #19232b;
-              font-size: 24rpx;
-            }
-          }
-        }
+.skeleton-cat-item {
+	padding: 24rpx 16rpx;
+}
 
-        .type_item {
-          display: flex;
-          margin-bottom: 40rpx;
-          .dish_img {
-            width: 128rpx;
-            margin-right: 30rpx;
-            .dish_img_url {
-              display: block;
-              width: 128rpx;
-              height: 128rpx;
-              border-radius: 8rpx;
-            }
-          }
-          .dish_info {
-            position: relative;
-            flex: 1;
-            padding-bottom: 40rpx;
-            border-bottom: solid 1px #ebeef5;
-            .dish_name {
-              font-size: 32rpx;
-              color: #333333;
-              font-family: PingFangSC, PingFangSC-Semibold;
-              font-weight: 600;
-            }
+.skeleton-dishes {
+	flex: 1;
+	padding: 20rpx;
+}
 
-            .dish_price {
-              font-size: 36rpx;
-              color: #e94e3c;
-              font-weight: bold;
-              .ico {
-                font-size: 24rpx;
-              }
-            }
-            .dish_active {
-              position: absolute;
-              right: 20rpx;
-              bottom: 20rpx;
-              display: flex;
-              .dish_add,
-              .dish_red {
-                display: block;
-                width: 72rpx;
-                height: 72rpx;
-              }
-              .dish_number {
-                padding: 0 10rpx;
-                line-height: 72rpx;
-                font-size: 30rpx;
-                font-family: PingFangSC, PingFangSC-Medium;
-                font-weight: 500;
-              }
-            }
-          }
-        }
-        &::before {
-          content: '';
-          position: absolute;
-          width: 100vw;
-          height: 120rpx;
-          z-index: 99;
-          background: linear-gradient(
-            0deg,
-            rgba(255, 255, 255, 1) 10%,
-            rgba(255, 255, 255, 0)
-          );
-          bottom: 0px;
-          left: 0px;
-        }
-        .seize_seat {
-          width: 100%;
-          height: 120rpx;
-        }
-      }
-    }
-    .dish_detail_pop {
-      width: calc(100vw - 160rpx);
-      box-sizing: border-box;
-      position: relative;
-      top: 50%;
-      left: 50%;
-      padding: 40rpx;
-      transform: translateX(-50%) translateY(-50%);
-      background: #fff;
-      border-radius: 20rpx;
-      .div_big_image {
-        width: 100%;
-        height: 320rpx;
-        border-radius: 10rpx;
-      }
-      .title {
-        font-size: 40rpx;
-        line-height: 80rpx;
-        text-align: center;
-        font-weight: bold;
-      }
-      .dish_items {
-        height: 60vh;
-      }
-      .but_item {
-        display: flex;
-        position: relative;
-        flex: 1;
-        .price {
-          text-align: left;
-          color: #e94e3c;
-          line-height: 88rpx;
-          box-sizing: border-box;
-          font-size: 48rpx;
-          font-weight: bold;
-          .ico {
-            font-size: 28rpx;
-          }
-        }
-        .active {
-          position: absolute;
-          right: 0rpx;
-          bottom: 20rpx;
-          display: flex;
-          .dish_add,
-          .dish_red {
-            display: block;
-            width: 72rpx;
-            height: 72rpx;
-          }
-          .dish_number {
-            padding: 0 10rpx;
-            line-height: 72rpx;
-            font-size: 30rpx;
-            font-family: PingFangSC, PingFangSC-Medium;
-            font-weight: 500;
-          }
-          .dish_card_add {
-            width: 200rpx;
-            line-height: 60rpx;
-            text-align: center;
-            font-weight: 500;
-            font-size: 28rpx;
-            opacity: 1;
-            background: #ffc200;
-            border-radius: 30rpx;
-          }
-        }
-      }
-    }
-    .more_norm_pop {
-      width: calc(100vw - 160rpx);
-      box-sizing: border-box;
-      position: relative;
-      top: 50%;
-      left: 50%;
-      padding: 40rpx;
-      transform: translateX(-50%) translateY(-50%);
-      background: #fff;
-      border-radius: 20rpx;
-      .div_big_image {
-        width: 100%;
-        border-radius: 10rpx;
-      }
-      .title {
-        font-size: 40rpx;
-        line-height: 80rpx;
-        text-align: center;
-        font-weight: bold;
-      }
-      .items_cont {
-        display: flex;
-        flex-wrap: wrap;
-        margin-left: -14rpx;
-        max-height: 50vh;
-        .item_row {
-          .flavor_name {
-            height: 40rpx;
-            opacity: 1;
-            font-size: 28rpx;
-            font-family: PingFangSC, PingFangSC-Regular;
-            font-weight: 400;
-            text-align: left;
-            color: #666666;
-            line-height: 40rpx;
-            padding-left: 10rpx;
-            padding-top: 20rpx;
-          }
-          .flavor_item {
-            display: flex;
-            flex-wrap: wrap;
-            .item {
-              border: 1px solid #ffb302;
-              border-radius: 12rpx;
-              margin: 20rpx 10rpx;
-              padding: 0 26rpx;
-              height: 60rpx;
-              line-height: 60rpx;
-              font-family: PingFangSC, PingFangSC-Regular;
-              font-weight: 400;
-              color: #333333;
-            }
-            .act {
-              // background: linear-gradient(144deg, #ffda05 18%, #ffb302 80%);
-              background: #ffc200;
-              border: 1px solid #ffc200;
-              font-family: PingFangSC, PingFangSC-Medium;
-              font-weight: 500;
-            }
-          }
-        }
-      }
-      .but_item {
-        display: flex;
-        position: relative;
-        flex: 1;
-        padding-left: 10rpx;
-        margin: 34rpx 0 -20rpx 0;
-        .price {
-          text-align: left;
-          color: #e94e3c;
-          line-height: 88rpx;
-          box-sizing: border-box;
-          font-size: 48rpx;
-          font-family: DIN, DIN-Medium;
-          font-weight: 500;
-          .ico {
-            font-size: 28rpx;
-          }
-        }
-        .active {
-          position: absolute;
-          right: 0rpx;
-          bottom: 20rpx;
-          display: flex;
-          .dish_add,
-          .dish_red {
-            display: block;
-            width: 72rpx;
-            height: 72rpx;
-          }
-          .dish_number {
-            padding: 0 10rpx;
-            line-height: 72rpx;
-            font-size: 30rpx;
-            font-family: PingFangSC, PingFangSC-Medium;
-            font-weight: 500;
-          }
-          .dish_card_add {
-            width: 200rpx;
-            height: 60rpx;
-            line-height: 60rpx;
-            text-align: center;
-            font-weight: 500;
-            font-size: 28rpx;
-            opacity: 1;
-            // background: linear-gradient(144deg, #ffda05 18%, #ffb302 80%);
-            background: #ffc200;
-            border-radius: 30rpx;
-          }
-        }
-      }
-    }
-    .lodding {
-      position: relative;
-      top: 40%;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .lodding_ico {
-        width: 160rpx;
-        height: 160rpx;
-        border-radius: 100%;
-      }
-    }
-    .close {
-      position: absolute;
-      bottom: -180rpx;
-      left: 50%;
-      transform: translateX(-50%);
-      .close_img {
-        width: 88rpx;
-        height: 88rpx;
-      }
-    }
-  }
-  .mask-box {
-    position: absolute;
-    height: 136rpx;
-    width: 100%;
-    bottom: 0;
-    background-color: #FFF8EC;
-    opacity: 0.5;
-  }
+.skeleton-dish-item {
+	display: flex;
+	padding: 20rpx 0;
+	border-bottom: 1rpx solid $border-light;
+}
+
+.skeleton-dish-img {
+	width: 180rpx;
+	height: 180rpx;
+	border-radius: $radius-md;
+}
+
+.skeleton-dish-info {
+	flex: 1;
+	padding-left: 20rpx;
+}
+
+.skeleton-line {
+	height: 24rpx;
+	border-radius: 8rpx;
+}
+
+.skeleton-animate {
+	background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+	background-size: 200% 100%;
+	animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+	0% { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}
+
+/* ===== 主内容区 ===== */
+.home-content {
+	padding: 0 20rpx;
+	padding-bottom: 140rpx;
+	height: 100vh;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+/* ===== 店铺信息卡片 ===== */
+.shop-card {
+	background: #fff;
+	border-radius: $radius-lg;
+	padding: 24rpx;
+	margin-bottom: 16rpx;
+	box-shadow: $shadow-card;
+}
+
+.shop-card-top {
+	display: flex;
+	align-items: center;
+	gap: 16rpx;
+	margin-bottom: 16rpx;
+}
+
+.shop-logo {
+	width: 72rpx;
+	height: 72rpx;
+	border-radius: $radius-md;
+	background: $brand-primary-bg;
+}
+
+.shop-info {
+	flex: 1;
+}
+
+.shop-name {
+	font-size: $font-lg;
+	font-weight: 700;
+	color: $text-primary;
+}
+
+.shop-meta {
+	display: flex;
+	align-items: center;
+	gap: 8rpx;
+	margin-top: 6rpx;
+
+	.meta-item {
+		font-size: $font-sm;
+		color: $text-secondary;
+	}
+
+	.meta-sep {
+		font-size: 20rpx;
+		color: $border-normal;
+	}
+}
+
+.shop-card-desc {
+	font-size: $font-sm;
+	color: $text-tertiary;
+	line-height: 1.5;
+	padding: 12rpx 16rpx;
+	background: #fafbfc;
+	border-radius: $radius-sm;
+}
+
+/* ===== 菜品区域 ===== */
+.menu-area {
+	display: flex;
+	height: calc(100vh - 270rpx);
+	border-radius: $radius-lg;
+	overflow: hidden;
+	background: #fff;
+	box-shadow: $shadow-card;
+}
+
+/* 左侧分类 */
+.menu-categories {
+	width: 180rpx;
+	background: #f8f9fb;
+	flex-shrink: 0;
+}
+
+.menu-cat-item {
+	position: relative;
+	padding: 24rpx 16rpx;
+	display: flex;
+	align-items: center;
+	gap: 8rpx;
+	transition: background 0.2s ease;
+
+	&--active {
+		background: #fff;
+
+		.cat-name {
+			color: $brand-primary;
+			font-weight: 600;
+		}
+	}
+}
+
+.cat-indicator {
+	width: 6rpx;
+	height: 32rpx;
+	background: $brand-primary;
+	border-radius: 3rpx;
+}
+
+.cat-name {
+	font-size: $font-sm;
+	color: $text-secondary;
+	line-height: 1.3;
+}
+
+.menu-cat-spacer {
+	height: 60rpx;
+}
+
+/* 右侧菜品 */
+.menu-dishes {
+	flex: 1;
+	padding: 0 20rpx;
+}
+
+.dish-section {
+	min-height: 100%;
+}
+
+.menu-dish-spacer {
+	height: 60rpx;
+}
+
+.menu-dishes-empty {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ===== 底部结算栏 ===== */
+.footer-bar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 100rpx;
+	background: #fff;
+	display: flex;
+	align-items: center;
+	padding: 0 20rpx;
+	padding-bottom: constant(safe-area-inset-bottom);
+	padding-bottom: env(safe-area-inset-bottom);
+	box-shadow: 0 -2rpx 16rpx rgba(0,0,0,0.06);
+	z-index: 99;
+	gap: 16rpx;
+}
+
+.footer-cart-icon {
+	position: relative;
+	flex-shrink: 0;
+}
+
+.cart-icon-wrap {
+	width: 80rpx;
+	height: 80rpx;
+	border-radius: 50%;
+	background: #e5e7eb;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.3s ease;
+
+	.cart-emoji {
+		font-size: 40rpx;
+	}
+
+	&--filled {
+		background: linear-gradient(135deg, #1a56db, #3b82f6);
+		box-shadow: 0 4rpx 20rpx rgba($brand-primary, 0.35);
+	}
+}
+
+.cart-badge {
+	position: absolute;
+	top: -4rpx;
+	right: -4rpx;
+	min-width: 36rpx;
+	height: 36rpx;
+	line-height: 36rpx;
+	text-align: center;
+	background: #ef4444;
+	color: #fff;
+	font-size: 20rpx;
+	font-weight: 700;
+	border-radius: 18rpx;
+	padding: 0 6rpx;
+	border: 2rpx solid #fff;
+}
+
+.footer-price {
+	flex: 1;
+
+	.price-symbol {
+		font-size: $font-sm;
+		color: $text-tertiary;
+	}
+
+	.price-value {
+		font-size: $font-xl;
+		font-weight: 700;
+		color: $text-tertiary;
+	}
+
+	&--has {
+		.price-symbol {
+			color: $brand-accent;
+		}
+		.price-value {
+			color: $brand-accent;
+		}
+	}
+}
+
+.footer-btn {
+	padding: 18rpx 40rpx;
+	background: #e5e7eb;
+	color: #999;
+	font-size: $font-base;
+	font-weight: 600;
+	border-radius: $radius-round;
+	transition: all 0.3s ease;
+
+	&--active {
+		background: linear-gradient(135deg, $brand-primary, $brand-primary-light);
+		color: #fff;
+		box-shadow: 0 4rpx 20rpx rgba($brand-primary, 0.35);
+
+		&:active {
+			transform: scale(0.95);
+			opacity: 0.9;
+		}
+	}
+}
+
+/* ===== 弹窗遮罩动画 ===== */
+@keyframes maskFadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+/* ===== 口味弹窗 ===== */
+.flavor-popup {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #fff;
+	border-radius: 32rpx 32rpx 0 0;
+	max-height: 70vh;
+	z-index: 9999;
+	padding-bottom: constant(safe-area-inset-bottom);
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+.flavor-header {
+	padding: 28rpx 32rpx 16rpx;
+	text-align: center;
+}
+
+.flavor-title {
+	font-size: $font-lg;
+	font-weight: 600;
+	color: $text-primary;
+}
+
+.flavor-body {
+	max-height: 50vh;
+	padding: 0 32rpx;
+}
+
+.flavor-group {
+	margin-bottom: 24rpx;
+}
+
+.flavor-group-name {
+	font-size: $font-sm;
+	color: $text-tertiary;
+	margin-bottom: 12rpx;
+}
+
+.flavor-group-items {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16rpx;
+}
+
+.flavor-tag {
+	padding: 14rpx 28rpx;
+	background: #f3f4f7;
+	border: 1rpx solid $border-light;
+	border-radius: $radius-round;
+	font-size: $font-sm;
+	color: $text-secondary;
+	transition: all 0.2s ease;
+
+	&:active {
+		transform: scale(0.95);
+	}
+
+	&--active {
+		background: $brand-primary-bg;
+		border-color: $brand-primary;
+		color: $brand-primary;
+		font-weight: 500;
+	}
+}
+
+.flavor-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20rpx 32rpx;
+	border-top: 1rpx solid $border-light;
+	margin-top: 16rpx;
+}
+
+.flavor-footer-price {
+	font-size: $font-xl;
+	font-weight: 700;
+	color: $brand-accent;
+
+	.price-ico {
+		font-size: $font-sm;
+	}
+}
+
+.flavor-footer-actions {
+	display: flex;
+	align-items: center;
+	gap: 12rpx;
+}
+
+.action-icon {
+	width: 48rpx;
+	height: 48rpx;
+
+	&:active {
+		opacity: 0.7;
+		transform: scale(0.9);
+	}
+}
+
+.action-num {
+	font-size: $font-lg;
+	font-weight: 500;
+	color: $text-primary;
+	min-width: 48rpx;
+	text-align: center;
+}
+
+.add-btn {
+	padding: 16rpx 36rpx;
+	background: linear-gradient(135deg, $brand-primary, $brand-primary-light);
+	color: #fff;
+	font-size: $font-base;
+	font-weight: 600;
+	border-radius: $radius-round;
+	box-shadow: 0 4rpx 16rpx rgba($brand-primary, 0.25);
+
+	&:active {
+		transform: scale(0.95);
+		opacity: 0.9;
+	}
+}
+
+.flavor-close {
+	position: absolute;
+	top: 24rpx;
+	right: 24rpx;
+	width: 48rpx;
+	height: 48rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #f3f4f7;
+	border-radius: 50%;
+
+	.close-icon {
+		font-size: 24rpx;
+		color: $text-tertiary;
+	}
+}
+
+/* ===== 菜品详情弹窗 ===== */
+.detail-popup {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #fff;
+	border-radius: 32rpx 32rpx 0 0;
+	z-index: 9999;
+	padding-bottom: constant(safe-area-inset-bottom);
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+.detail-image {
+	width: 100%;
+	height: 400rpx;
+	border-radius: 32rpx 32rpx 0 0;
+	background: #f0f0f0;
+}
+
+.detail-name {
+	font-size: $font-xl;
+	font-weight: 700;
+	color: $text-primary;
+	padding: 24rpx 32rpx 8rpx;
+}
+
+.detail-desc {
+	font-size: $font-sm;
+	color: $text-tertiary;
+	padding: 0 32rpx 24rpx;
+	line-height: 1.6;
+}
+
+.detail-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20rpx 32rpx;
+	border-top: 1rpx solid $border-light;
+}
+
+.detail-price {
+	font-size: $font-xl;
+	font-weight: 700;
+	color: $brand-accent;
+
+	.price-ico {
+		font-size: $font-sm;
+	}
+}
+
+.detail-actions {
+	display: flex;
+	align-items: center;
+	gap: 12rpx;
+}
+
+.detail-close {
+	position: absolute;
+	top: 24rpx;
+	right: 24rpx;
+	width: 48rpx;
+	height: 48rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0,0,0,0.3);
+	border-radius: 50%;
+
+	.close-icon {
+		font-size: 24rpx;
+		color: #fff;
+	}
+}
+
+/* 套餐内菜品 */
+.setmeal-items {
+	max-height: 400rpx;
+	padding: 24rpx 32rpx;
+}
+
+.setmeal-item {
+	display: flex;
+	align-items: center;
+	gap: 16rpx;
+	padding: 16rpx 0;
+	border-bottom: 1rpx solid $border-light;
+
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.setmeal-item-img {
+	width: 100rpx;
+	height: 100rpx;
+	border-radius: $radius-sm;
+	background: #f0f0f0;
+}
+
+.setmeal-item-info {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.setmeal-item-name {
+	font-size: $font-base;
+	font-weight: 500;
+	color: $text-primary;
+}
+
+.setmeal-item-copies {
+	font-size: $font-sm;
+	color: $brand-primary;
+	font-weight: 500;
+	background: $brand-primary-bg;
+	padding: 4rpx 16rpx;
+	border-radius: 8rpx;
+}
+
+/* ===== 购物车弹窗 ===== */
+.cart-popup {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #fff;
+	border-radius: 32rpx 32rpx 0 0;
+	z-index: 9999;
+	max-height: 60vh;
+	padding-bottom: constant(safe-area-inset-bottom);
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
+.cart-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 28rpx 32rpx 16rpx;
+	border-bottom: 1rpx solid $border-light;
+}
+
+.cart-header-title {
+	font-size: $font-lg;
+	font-weight: 700;
+	color: $text-primary;
+}
+
+.cart-header-clear {
+	padding: 8rpx 16rpx;
+
+	.clear-text {
+		font-size: $font-sm;
+		color: $text-tertiary;
+	}
+
+	&:active {
+		.clear-text { color: $brand-danger; }
+	}
+}
+
+.cart-list {
+	max-height: 50vh;
+	padding: 0 32rpx;
+}
+
+.cart-item {
+	display: flex;
+	align-items: center;
+	gap: 16rpx;
+	padding: 20rpx 0;
+	border-bottom: 1rpx solid $border-light;
+}
+
+.cart-item-img {
+	width: 100rpx;
+	height: 100rpx;
+	border-radius: $radius-sm;
+	background: #f0f0f0;
+}
+
+.cart-item-info {
+	flex: 1;
+}
+
+.cart-item-name {
+	font-size: $font-base;
+	color: $text-primary;
+	font-weight: 500;
+	display: block;
+	margin-bottom: 4rpx;
+}
+
+.cart-item-price {
+	font-size: $font-sm;
+	color: $brand-accent;
+	font-weight: 600;
+}
+
+.cart-item-actions {
+	display: flex;
+	align-items: center;
+	gap: 12rpx;
+	flex-shrink: 0;
+}
+
+.cart-spacer {
+	height: 40rpx;
+}
+
+/* ===== 弹窗动画适配 ===== */
+@keyframes popupSlideUp {
+	from {
+		opacity: 0;
+		transform: translateY(100%);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.popup-slide-up {
+	animation: popupSlideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
 }

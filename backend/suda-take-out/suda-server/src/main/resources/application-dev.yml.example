@@ -16,11 +16,11 @@ suda:
     database: sky_take_out
     username: 你的数据库用户名
     password: 你的数据库密码
-  alioss:
-    endpoint: 你的OSS Endpoint
-    access-key-id: 你的阿里云AccessKeyId
-    access-key-secret: 你的阿里云AccessKeySecret
-    bucket-name: 你的OSS Bucket名称
+  minio:
+    endpoint: http://你的MinIO地址:9010
+    access-key: 你的MinIO访问密钥
+    secret-key: 你的MinIO秘密密钥
+    bucket-name: sky-take-out
   redis:
     host: 你的Redis地址
     port: 6379

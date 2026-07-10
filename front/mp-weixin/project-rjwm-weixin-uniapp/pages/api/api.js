@@ -155,6 +155,15 @@ export const submitOrderSubmit = (params) => {
 	})
 }
 
+// 订单支付（模拟微信支付）
+export const orderPayment = (params) => {
+	return request({
+		url: '/user/order/payment',
+		method: 'PUT',
+		params
+	})
+}
+
 // 历史/最近订单查询
 export const queryOrderUserPage = (params) => {
 	return request({
@@ -169,5 +178,48 @@ export const oneOrderAgain = (params) => {
 	return request({
 		url: `/user/order/repetition/${params.id}`,
 		method: 'POST'
+	})
+}
+
+// ===== AI 助手相关 =====
+// AI 同步聊天
+export const aiChat = (params) => {
+	return request({
+		url: '/user/ai/chat',
+		method: 'POST',
+		params
+	})
+}
+
+// AI 获取购物车状态
+export const aiGetCartStatus = () => {
+	return request({
+		url: '/user/ai/cart/status',
+		method: 'GET'
+	})
+}
+
+// AI 清空对话历史
+export const aiClearHistory = (sessionId) => {
+	return request({
+		url: `/user/ai/history/${sessionId}`,
+		method: 'DELETE'
+	})
+}
+
+// ===== 订单详情 =====
+// 根据订单ID查询订单详情
+export const queryOrderDetailById = (id) => {
+	return request({
+		url: `/user/order/orderDetail/${id}`,
+		method: 'GET'
+	})
+}
+
+// ===== 订单取消 =====
+export const cancelOrder = (id) => {
+	return request({
+		url: `/user/order/cancel/${id}`,
+		method: 'PUT'
 	})
 }

@@ -1,40 +1,20 @@
 {
-  "pages": [{
+  "pages": [
+    {
       "path": "pages/index/index",
       "style": {
         "navigationStyle": "custom",
-        "navigationBarTitleText": "速达外卖"
+        "navigationBarTitleText": "速达外卖",
+        "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/order/index",
+      "path": "pages/ai/index",
       "style": {
-        "navigationBarTitleText": "提交订单",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#E94E3C"
-
-      }
-    },
-    {
-      "path": "pages/order/success",
-      "style": {
-        "navigationBarTitleText": "提交成功",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#E94E3C"
-      }
-    },
-    {
-      "path": "pages/nonet/index",
-      "style": {
-        "navigationBarTitleText": "无网络"
-      }
-    }, {
-      "path": "pages/address/address",
-      "style": {
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "地址管理",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#E94E3C"
+        "navigationBarTitleText": "AI小速",
+        "navigationBarBackgroundColor": "#1a56db",
+        "navigationBarTextStyle": "white",
+        "enablePullDownRefresh": false
       }
     },
     {
@@ -42,43 +22,104 @@
       "style": {
         "navigationBarTitleText": "个人中心",
         "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#E94E3C",
+        "navigationBarBackgroundColor": "#1a56db",
         "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/order/index",
+      "style": {
+        "navigationBarTitleText": "确认订单",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#1a56db",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/order/success",
+      "style": {
+        "navigationBarTitleText": "提交成功",
+        "enablePullDownRefresh": false,
+        "navigationBarBackgroundColor": "#1a56db",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/address/address",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "地址管理",
+        "enablePullDownRefresh": false
       }
     },
     {
       "path": "pages/addOrEditAddress/addOrEditAddress",
       "style": {
         "navigationStyle": "custom",
-        "navigationBarTitleText": "新增收获地址",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#E94E3C"
+        "navigationBarTitleText": "编辑地址",
+        "enablePullDownRefresh": false
       }
-
     },
     {
       "path": "pages/historyOrder/historyOrder",
       "style": {
         "navigationBarTitleText": "历史订单",
         "enablePullDownRefresh": true,
-        "navigationBarBackgroundColor": "#E94E3C"
-
+        "navigationBarBackgroundColor": "#1a56db",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/nonet/index",
+      "style": {
+        "navigationBarTitleText": "无网络",
+        "navigationBarBackgroundColor": "#1a56db",
+        "navigationBarTextStyle": "white"
       }
     }
   ],
   "globalStyle": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "速达外卖",
-    "navigationBarBackgroundColor": "#E94E3C",
-    // "navigationBarBackground": "#E95F3C",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarBackgroundColor": "#1a56db",
+    "backgroundColor": "#f3f4f7",
+    "backgroundColorTop": "#1a56db",
+    "backgroundColorBottom": "#f3f4f7"
   },
-  "condition": { // 模式配置，仅开发期间生效
-    "current": 0, // 当前激活的模式(list 的索引项)
-    "list": [{
-      "name": "", // 模式名称
-      "path": "", // 启动页面，必选
-      "query": "" // 启动参数，在页面的onLoad函数里面得到
-    }]
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1a56db",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tab-home.png",
+        "selectedIconPath": "static/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/ai/index",
+        "text": "AI小速",
+        "iconPath": "static/tab-ai.png",
+        "selectedIconPath": "static/tab-ai-active.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "static/tab-my.png",
+        "selectedIconPath": "static/tab-my-active.png"
+      }
+    ]
+  },
+  "condition": {
+    "current": 0,
+    "list": [
+      {
+        "name": "",
+        "path": "",
+        "query": ""
+      }
+    ]
   }
 }

@@ -26,7 +26,7 @@
         <commons.lang3>3.17.0</commons.lang3>
         <druid>1.2.23</druid>
         <pagehelper>2.1.0</pagehelper>
-        <aliyun.sdk.oss>3.10.2</aliyun.sdk.oss>
+        <minio>8.5.17</minio>
         <knife4j>4.5.0</knife4j>
         <aspectj>1.9.22</aspectj>
         <jjwt>0.12.6</jjwt>
@@ -109,9 +109,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.aliyun.oss</groupId>
-                <artifactId>aliyun-sdk-oss</artifactId>
-                <version>${aliyun.sdk.oss}</version>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio}</version>
             </dependency>
 
             <!-- poi -->

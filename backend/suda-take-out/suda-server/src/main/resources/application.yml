@@ -4,11 +4,11 @@ server:
 spring:
   ai:
     openai:
-      api-key: ${AI_API_KEY}
-      base-url: ${AI_BASE_URL}
+      api-key: sk-b1c09989464b49f8ae74c10d0a3e8a61
+      base-url: https://api.deepseek.com
       chat:
           options:
-            model: gpt-4o-mini
+            model: deepseek-chat
             temperature: 0.7
             max-tokens: 2000
 
@@ -28,10 +28,10 @@ spring:
       username: ${suda.datasource.username}
       password: ${suda.datasource.password}
   redis:
-    host: ${suda.redis.host}
-    port: ${suda.redis.port}
-    password: ${suda.redis.password}
-    database: ${suda.redis.database}
+    host: 127.0.0.1
+    port: 6380
+    password: 123456
+    database: 1
 
 # springdoc-openapi 配置
 springdoc:
@@ -72,11 +72,6 @@ suda:
     user-ttl: 7200000
     # 用户端令牌名称
     user-token-name: authentication
-  alioss:
-    endpoint: ${suda.alioss.endpoint}
-    access-key-id: ${suda.alioss.access-key-id}
-    access-key-secret: ${suda.alioss.access-key-secret}
-    bucket-name: ${suda.alioss.bucket-name}
   wechat:
     app-id: ${suda.wechat.app-id}
     secret: ${suda.wechat.secret}

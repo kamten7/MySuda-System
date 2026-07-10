@@ -3,6 +3,7 @@ package com.suda.AI.config;
 import com.suda.AI.tools.CartTools;
 import com.suda.AI.tools.DishTools;
 import com.suda.AI.tools.RecommendTools;
+import com.suda.AI.tools.UserAITools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.model.function.FunctionCallback;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -10,34 +11,30 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 /**
  * Spring AI 1.0.0-M5 配置
  *
- * <p>使用 {@link FunctionCallback} 包装工具类方法，通过
- * {@link ChatClient.Builder#defaultFunctions(FunctionCallback...)} 注册到 ChatClient。</p>
+ * <p>使用 {@link FunctionCallback} 包装工具类方法。通过 Spring 的
+ * {@code List<FunctionCallback>} 自动收集所有 FunctionCallback Bean，
+ * 统一注册到 {@link ChatClient} 中。</p>
  *
- * <p>AI 会根据 FunctionCallback 的 name/description 自动决定何时调用哪个工具。
- * 购物车操作的实际限制由 System Prompt 中的规则控制。</p>
+ * <p>这样避免了逐个注入同类型 Bean 时依赖 -parameters 编译参数的隐患。
+ * 新增工具只需添加对应的 {@link FunctionCallback} {@code @Bean} 即可自动生效。</p>
  */
 @Configuration
 public class SpringAIConfig {
 
-    // ==================== ChatClient ====================
-
+    /**
+     * 构建 ChatClient，自动收集上下文中所有 {@link FunctionCallback} Bean。
+     *
+     * @param chatModel        Spring AI OpenAI 聊天模型
+     * @param functionCallbacks 所有注册的 FunctionCallback Bean（自动按类型收集）
+     */
     @Bean
     public ChatClient chatClient(OpenAiChatModel chatModel,
-                                 FunctionCallback searchDishesCallback,
-                                 FunctionCallback getDishDetailCallback,
-                                 FunctionCallback getCategoriesCallback,
-                                 FunctionCallback getHotDishesCallback,
-                                 FunctionCallback searchByPriceRangeCallback,
-                                 FunctionCallback getRecommendationsCallback,
-                                 FunctionCallback getBudgetFriendlyCallback,
-                                 FunctionCallback addToCartCallback,
-                                 FunctionCallback removeFromCartCallback,
-                                 FunctionCallback getCartCallback,
-                                 FunctionCallback clearCartCallback,
-                                 FunctionCallback getCartCountCallback) {
+                                 List<FunctionCallback> functionCallbacks) {
 
         return ChatClient.builder(chatModel)
                 .defaultOptions(OpenAiChatOptions.builder()
@@ -45,23 +42,39 @@ public class SpringAIConfig {
                         .temperature(0.7)
                         .maxTokens(3000)
                         .build())
-                .defaultFunctions(
-                        // 菜品查询工具
-                        searchDishesCallback,
-                        getDishDetailCallback,
-                        getCategoriesCallback,
-                        getHotDishesCallback,
-                        searchByPriceRangeCallback,
-                        // 智能推荐工具
-                        getRecommendationsCallback,
-                        getBudgetFriendlyCallback,
-                        // 购物车工具
-                        addToCartCallback,
-                        removeFromCartCallback,
-                        getCartCallback,
-                        clearCartCallback,
-                        getCartCountCallback
-                )
+                .defaultFunctions(functionCallbacks.toArray(new FunctionCallback[0]))
+                .build();
+    }
+
+    // ==================== 时间工具 FunctionCallbacks ====================
+
+    @Bean
+    public FunctionCallback getCurrentDateCallback(UserAITools userAITools) {
+        return FunctionCallback.builder()
+                .method("getCurrentDate")
+                .targetObject(userAITools)
+                .name("getCurrentDate")
+                .description("获取当前真实日期（格式：yyyy-MM-dd）。AI训练数据有截止日期，不知道'今天'是哪一天，处理任何时间相关的查询（今天/本周/最近等）时必须先调用此函数。")
+                .build();
+    }
+
+    @Bean
+    public FunctionCallback getCurrentDateTimeCallback(UserAITools userAITools) {
+        return FunctionCallback.builder()
+                .method("getCurrentDateTime")
+                .targetObject(userAITools)
+                .name("getCurrentDateTime")
+                .description("获取当前日期和时间（格式：yyyy-MM-dd HH:mm:ss）")
+                .build();
+    }
+
+    @Bean
+    public FunctionCallback getTimeContextCallback(UserAITools userAITools) {
+        return FunctionCallback.builder()
+                .method("getTimeContext")
+                .targetObject(userAITools)
+                .name("getTimeContext")
+                .description("获取当前时间上下文，包括星期几、当前时段（早餐/午餐/晚餐/夜宵等）、是否是用餐时间。适合用户问'今天吃什么'、'现在有什么'等时间相关推荐时调用")
                 .build();
     }
 
