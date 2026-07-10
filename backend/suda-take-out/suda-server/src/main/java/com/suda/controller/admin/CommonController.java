@@ -2,7 +2,7 @@ package com.suda.controller.admin;
 
 
 import com.suda.result.Result;
-import com.suda.utils.AliOssUtil;
+import com.suda.utils.MinioUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class CommonController {
 
 
     @Autowired
-    private AliOssUtil aliOssUtil;
+    private MinioUtil minioUtil;
 
     /**
      * 文件上传接口
@@ -43,7 +43,7 @@ public class CommonController {
             String extention=originalFilename.substring(originalFilename.lastIndexOf("."));
             String objectName = UUID.randomUUID().toString() + extention;
             //使用UUID生成文件名，确保文件名唯一性
-            String url=aliOssUtil.upload(file.getBytes(),objectName);
+            String url=minioUtil.upload(file.getBytes(),objectName);
             return Result.success(url);
         } catch (IOException e) {
             log.error("文件上传失败",e);

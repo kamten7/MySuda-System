@@ -30,6 +30,7 @@ public class UserAIController {
      * 用户查询推荐菜品，基于自然语言对话查，不进行agent工具调用
      * 仅仅是对话机器人
      * 同步响应
+     * 线程占用：同步阻塞，占用主线程
      * @param request 用户输入的消息和会话ID
      * @return 包含AI回答、购物车更新状态、购物车数量、会话ID的响应
      */
@@ -46,9 +47,10 @@ public class UserAIController {
      * 用户查询推荐菜品，基于自然语言对话查，不进行agent工具调用
      * 仅仅是对话机器人
      * 流式响应
-     * @param request
-     * @param httpRequest
-     * @param httpResponse
+     * 线程占用：异步非阻塞，不占用主线程
+     * @param request 用户输入的消息和会话ID
+     * @param httpRequest HTTP请求对象，用于异步上下文
+     * @param httpResponse HTTP响应对象，用于流式输出
      */
     @PostMapping("/chat/stream")
     @Operation(summary = "AI聊天（流式响应）")
@@ -56,7 +58,7 @@ public class UserAIController {
                            HttpServletRequest httpRequest,
                            HttpServletResponse httpResponse) {
         log.info("用户AI流式聊天：{}", request.getMessage());
-        httpRequest.startAsync().setTimeout(60_000L);
+        httpRequest.startAsync().setTimeout(120_000L);//设置超时时间为120秒
         userAIService.streamChat(request, httpRequest.getAsyncContext());
     }
 
@@ -75,7 +77,7 @@ public class UserAIController {
 
     /**
      * 清空用户对话历史
-     * @param sessionId 会话ID
+     * @param sessionId 会话ID，每次对话都有一个会话ID，用于区分不同的对话
      * @return 无
      */
     @DeleteMapping("/history/{sessionId}")

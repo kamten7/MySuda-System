@@ -108,6 +108,19 @@ public class OrderServiceImpl implements OrderService {
         orders.setPhone(addressBook.getPhone());
         orders.setConsignee(addressBook.getConsignee());//收货人
         orders.setUserId(userId);
+        // 填充地址全称
+        orders.setAddress(fullAddress);
+        // 前端未传的 NOT NULL 字段给默认值
+        if (orders.getDeliveryStatus() == null) orders.setDeliveryStatus(0);
+        if (orders.getPackAmount() == null) orders.setPackAmount(0);
+        if (orders.getTablewareNumber() == null) orders.setTablewareNumber(0);
+        if (orders.getTablewareStatus() == null) orders.setTablewareStatus(0);
+
+        // 从购物车计算订单总金额：Σ(单价 × 数量)
+        BigDecimal totalAmount = shoppingCartlist.stream()
+                .map(item -> item.getAmount().multiply(BigDecimal.valueOf(item.getNumber())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        orders.setAmount(totalAmount);
 
         /**
             * 3、给订单明细表插入多条订单明细数据
