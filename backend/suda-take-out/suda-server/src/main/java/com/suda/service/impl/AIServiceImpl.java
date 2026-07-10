@@ -73,6 +73,7 @@ public class AIServiceImpl implements AIService {
 
     // ==================== 私有工具方法 ====================
 
+    /** 配置 SSE 响应头 */
     private void setupSSE(HttpServletResponse response) {
         response.setContentType("text/event-stream");
         response.setCharacterEncoding("UTF-8");
@@ -80,11 +81,13 @@ public class AIServiceImpl implements AIService {
         response.setHeader("X-Accel-Buffering", "no");
     }
 
+    /** 写入 SSE 事件 */
     private void writeToken(PrintWriter writer, String token) {
         writer.write("data:" + token + "\n\n");
         writer.flush();
     }
 
+    /** 完成 SSE 输出 */
     private void finish(PrintWriter writer, AsyncContext ctx) {
         writer.write("data:[DONE]\n\n");
         writer.flush();

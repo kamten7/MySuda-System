@@ -33,7 +33,7 @@ public class AdminAIController {
     public void streamQuery(@RequestBody AIQueryRequest request,
                             HttpServletRequest httpRequest,
                             HttpServletResponse httpResponse) {
-        log.info("收到AI查询: {}", request.getQuestion());
+        log.info(": {}", request.getQuestion());
         httpRequest.startAsync().setTimeout(120_000L);
         aiService.streamQuery(request, httpRequest.getAsyncContext());
     }
