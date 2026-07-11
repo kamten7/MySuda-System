@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, onMounted } from 'vue'
 import * as echarts from 'echarts'
 import type { DateRangeType } from '@/utils/date'
 import { getDateRange, formatAmount, formatRate } from '@/utils/date'
@@ -220,10 +220,11 @@ const top10Data = ref<SalesTop10ReportVO>({ nameList: [], numberList: [] })
 
 async function fetchAllData() {
   loading.value = true
-  const range = getDateRange(activeType.value)
-  const params = { begin: range.start, end: range.end }
 
   try {
+    const range = getDateRange(activeType.value)
+    const params = { begin: range.start, end: range.end }
+
     const [turnoverRes, userRes, orderRes, top10Res] = await Promise.allSettled([
       getTurnoverStatistics(params),
       getUserStatistics(params),
@@ -231,27 +232,46 @@ async function fetchAllData() {
       getTop10(params),
     ])
 
+    // Count API failures for accurate error reporting
+    let failures = 0
+
     if (turnoverRes.status === 'fulfilled' && turnoverRes.value.data.code === 1) {
       turnoverData.value = turnoverRes.value.data.data
+    } else {
+      failures++
     }
     if (userRes.status === 'fulfilled' && userRes.value.data.code === 1) {
       userData.value = userRes.value.data.data
+    } else {
+      failures++
     }
     if (orderRes.status === 'fulfilled' && orderRes.value.data.code === 1) {
       orderData.value = orderRes.value.data.data
+    } else {
+      failures++
     }
     if (top10Res.status === 'fulfilled' && top10Res.value.data.code === 1) {
       top10Data.value = top10Res.value.data.data
+    } else {
+      failures++
     }
 
-    await nextTick()
-    updateAllCharts()
+    if (failures > 0) {
+      console.warn(`Statistics: ${failures}/4 APIs failed`)
+      if (failures === 4) {
+        ElMessage.error('数据加载失败，请确认后端服务已启动')
+      }
+    }
   } catch (e) {
-    console.error('Statistics fetch error:', e)
-    ElMessage.error('数据加载失败，请确认后端服务已启动')
+    console.error('Statistics error:', e)
+    ElMessage.error('数据加载异常，请刷新页面重试')
   } finally {
     loading.value = false
   }
+
+  // Chart update outside try-catch — chart errors shouldn't show API error messages
+  await nextTick()
+  updateAllCharts()
 }
 
 // ==================== Overview cards ====================
@@ -608,7 +628,10 @@ function updateTop10Chart() {
 }
 
 // ==================== Init ====================
-fetchAllData()
+onMounted(() => {
+  // onMounted 确保 useChart 的 onMounted 先初始化 ECharts 实例，再拉取数据
+  nextTick(() => fetchAllData())
+})
 </script>
 
 <style scoped lang="scss">

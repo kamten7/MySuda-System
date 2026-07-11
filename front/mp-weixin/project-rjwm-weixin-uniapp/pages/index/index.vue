@@ -1,8 +1,5 @@
 <template>
 <view class="home-page">
-	<!-- 自定义导航栏 -->
-	<NavBar :cartCount="orderDishNumber" @open-cart="openOrderCartList = true" />
-
 	<!-- 加载骨架屏 -->
 	<view class="home-loading" v-if="loading">
 		<view class="home-skeleton">
@@ -25,11 +22,11 @@
 	</view>
 
 	<!-- 主内容 -->
-	<view class="home-content" v-else :style="{ paddingTop: (navbarH + 20) + 'rpx' }">
+	<view class="home-content" v-else>
 		<!-- 店铺信息卡片 -->
 		<view class="shop-card stagger-item">
 			<view class="shop-card-top">
-				<image class="shop-logo" src="/static/logo_ruiji.png" mode="aspectFit" />
+				<image class="shop-logo" src="/static/logo_brand.svg" mode="aspectFit" />
 				<view class="shop-info">
 					<text class="shop-name">速达外卖</text>
 					<view class="shop-meta">
@@ -104,7 +101,7 @@
 		</view>
 		<view class="footer-price" :class="{ 'footer-price--has': orderDishNumber > 0 }">
 			<text class="price-symbol">¥</text>
-			<text class="price-value">{{ orderDishNumber > 0 ? ((orderDishPrice / 100 + 6).toFixed(2)) : '0.00' }}</text>
+			<text class="price-value">{{ orderDishNumber > 0 ? ((orderDishPrice + 6).toFixed(2)) : '0.00' }}</text>
 		</view>
 		<view class="footer-btn" :class="{ 'footer-btn--active': orderDishNumber > 0 }" @click="goOrder()">
 			去结算
@@ -133,7 +130,7 @@
 			</scroll-view>
 			<view class="flavor-footer">
 				<view class="flavor-footer-price">
-					<text class="price-ico">¥ </text>{{ moreNormDishdata.price / 100 }}
+					<text class="price-ico">¥ </text>{{ moreNormDishdata.price }}
 				</view>
 				<view class="flavor-footer-actions" v-if="moreNormDishdata.dishNumber && moreNormDishdata.dishNumber > 0">
 					<image src="/static/btn_red.png" @click="redDishAction(moreNormDishdata, '普通')" class="action-icon" />
@@ -157,7 +154,7 @@
 			<view class="detail-name">{{ dishDetailes.name }}</view>
 			<view class="detail-desc">{{ dishDetailes.description }}</view>
 			<view class="detail-footer">
-				<view class="detail-price"><text class="price-ico">¥ </text>{{ dishDetailes.price / 100 }}</view>
+				<view class="detail-price"><text class="price-ico">¥ </text>{{ dishDetailes.price }}</view>
 				<view class="detail-actions" v-if="dishDetailes.dishNumber && dishDetailes.dishNumber > 0">
 					<image src="/static/btn_red.png" @click="redDishAction(dishDetailes, '普通')" class="action-icon" />
 					<text class="action-num">{{ dishDetailes.dishNumber }}</text>
@@ -181,7 +178,7 @@
 				</view>
 			</scroll-view>
 			<view class="detail-footer">
-				<view class="detail-price"><text class="price-ico">¥ </text>{{ dishDetailes.price / 100 }}</view>
+				<view class="detail-price"><text class="price-ico">¥ </text>{{ dishDetailes.price }}</view>
 				<view class="detail-actions" v-if="dishDetailes.dishNumber && dishDetailes.dishNumber > 0">
 					<image src="/static/btn_red.png" @click="redDishAction(dishDetailes, '普通')" class="action-icon" />
 					<text class="action-num">{{ dishDetailes.dishNumber }}</text>
@@ -209,7 +206,7 @@
 					<image mode="aspectFill" :src="getNewImage(item.image)" class="cart-item-img" />
 					<view class="cart-item-info">
 						<text class="cart-item-name">{{ item.name }}</text>
-						<text class="cart-item-price">¥{{ item.amount / 100 }}</text>
+						<text class="cart-item-price">¥{{ item.amount }}</text>
 					</view>
 					<view class="cart-item-actions">
 						<image v-if="item.number > 0" src="/static/btn_red.png" @click="redDishAction(item, '购物车')" class="action-icon" />

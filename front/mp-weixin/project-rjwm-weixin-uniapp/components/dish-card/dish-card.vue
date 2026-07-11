@@ -55,7 +55,7 @@ export default {
 	},
 	computed: {
 		priceText() {
-			return (this.price / 100).toFixed(2)
+			return (this.price || 0).toFixed(2)
 		}
 	},
 	methods: {

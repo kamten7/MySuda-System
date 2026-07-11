@@ -1,9 +1,9 @@
 <template>
 	<view class="my-page">
-		<!-- 头部渐变区 -->
-		<view class="my-header">
-			<view class="my-header-bg"></view>
-			<view class="my-header-content">
+		<!-- 功能内容区（直接从顶部开始） -->
+		<view class="my-content">
+			<!-- 用户信息卡片 -->
+			<view class="my-user-card">
 				<image class="my-avatar" :src="psersonUrl" mode="aspectFill" />
 				<view class="my-info">
 					<view class="my-name-row">
@@ -14,10 +14,7 @@
 					<text class="my-phone">{{ phoneNumber | getPhoneNum }}</text>
 				</view>
 			</view>
-		</view>
 
-		<!-- 功能区 -->
-		<view class="my-content">
 			<!-- 地址 + 历史订单 -->
 			<view class="my-card">
 				<view class="my-card-item" @click="goAddress">
@@ -44,7 +41,7 @@
 			<!-- 最近订单 -->
 			<view class="my-recent" v-if="recentOrdersList && recentOrdersList.length > 0">
 				<view class="my-section-title">最近订单</view>
-				<view class="my-order-card" v-for="(item, index) in recentOrdersList" :key="index">
+				<view class="my-order-card" v-for="(item, index) in recentOrdersList" :key="index" @click="goDetail(item.id)">
 					<view class="order-card-header">
 						<text class="order-card-time">{{ item.checkoutTime }}</text>
 						<text class="order-card-status" :class="'status-' + item.status">{{ statusWord(item.status) }}</text>
@@ -74,7 +71,7 @@ import { mapMutations } from 'vuex'
 export default {
 	data () {
 		return {
-			psersonUrl: '/static/btn_waiter_sel.png',
+			psersonUrl: '/static/logo_brand.svg',
 			nickName: '速达用户',
 			gender: '0',
 			phoneNumber: '18500557668',
@@ -114,7 +111,7 @@ export default {
 					if (data.records && data.records.length > 0) {
 						data.records[0].orderDetails && data.records[0].orderDetails.forEach(item => {
 							number += item.number
-							amount += item.amount / 100
+							amount += Number(item.amount)
 						})
 						this.sumOrder = { amount: amount.toFixed(2), number }
 					}
@@ -129,6 +126,9 @@ export default {
 		goOrder () {
 			uni.navigateTo({ url: '/pages/historyOrder/historyOrder' })
 		},
+			goDetail (id) {
+				uni.navigateTo({ url: '/pages/orderDetail/orderDetail?id=' + id })
+			},
 		async oneOrderFun (id) {
 			let pages = getCurrentPages()
 			let routeIndex = pages.findIndex(item => item.route === 'pages/index/index')
@@ -149,37 +149,30 @@ export default {
 	background: $page-bg;
 }
 
-/* 头部 */
-.my-header {
-	position: relative;
-	padding-bottom: 40rpx;
+/* 内容区（从顶部开始，无头部渐变） */
+.my-content {
+	padding: 24rpx;
 }
 
-.my-header-bg {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 280rpx;
-	background: linear-gradient(135deg, #1e3a8a 0%, #1a56db 100%);
-	border-radius: 0 0 40rpx 40rpx;
-}
-
-.my-header-content {
-	position: relative;
+/* 用户信息卡片 */
+.my-user-card {
+	background: linear-gradient(135deg, $brand-primary-bg, #dbeafe);
+	border-radius: $card-radius;
+	padding: 32rpx 28rpx;
+	margin-bottom: 20rpx;
+	box-shadow: $shadow-card;
 	display: flex;
 	align-items: center;
 	gap: 24rpx;
-	padding: 40rpx 32rpx;
-	padding-top: 80rpx;
 }
 
 .my-avatar {
-	width: 120rpx;
-	height: 120rpx;
+	width: 100rpx;
+	height: 100rpx;
 	border-radius: 50%;
-	border: 4rpx solid rgba(255,255,255,0.4);
-	background: rgba(255,255,255,0.2);
+	border: 3rpx solid rgba(26, 86, 219, 0.2);
+	background: rgba(255, 255, 255, 0.8);
+	flex-shrink: 0;
 }
 
 .my-info {
@@ -193,34 +186,29 @@ export default {
 }
 
 .my-name {
-	font-size: 36rpx;
+	font-size: 34rpx;
 	font-weight: 700;
-	color: #fff;
+	color: $brand-primary-dark;
 }
 
 .my-gender-icon {
-	width: 32rpx;
-	height: 32rpx;
+	width: 28rpx;
+	height: 28rpx;
 }
 
 .my-phone {
 	font-size: $font-sm;
-	color: rgba(255,255,255,0.75);
+	color: rgba(30, 58, 138, 0.6);
 	margin-top: 6rpx;
-}
-
-/* 内容区 */
-.my-content {
-	padding: 0 24rpx;
-	margin-top: -20rpx;
 }
 
 /* 功能区卡片 */
 .my-card {
 	background: #fff;
-	border-radius: $radius-lg;
+	border-radius: $card-radius;
 	box-shadow: $shadow-card;
-	overflow: hidden;
+	overflow: visible;
+	margin-bottom: 16rpx;
 }
 
 .my-card-item {
@@ -228,31 +216,34 @@ export default {
 	align-items: center;
 	justify-content: space-between;
 	padding: 32rpx 28rpx;
+	transition: background 0.15s;
 
 	&:active {
-		background: #fafafa;
+		background: #fafbfc;
 	}
 }
 
 .my-card-left {
 	display: flex;
 	align-items: center;
-	gap: 16rpx;
+	gap: 20rpx;
 }
 
 .my-card-icon {
-	width: 48rpx;
-	height: 48rpx;
-	border-radius: 12rpx;
+	width: 56rpx;
+	height: 56rpx;
+	border-radius: $radius-md;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	font-size: 30rpx;
+	box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
 
 	&--address {
-		background: $brand-primary-bg;
+		background: linear-gradient(135deg, $brand-primary-bg, #dbeafe);
 	}
 	&--order {
-		background: #fef3c7;
+		background: linear-gradient(135deg, #fef3c7, #fde68a);
 	}
 }
 
@@ -263,15 +254,15 @@ export default {
 }
 
 .my-card-arrow {
-	font-size: 36rpx;
-	color: #ccc;
+	font-size: 32rpx;
+	color: #d1d5db;
 	font-weight: 300;
 }
 
 .my-card-divider {
 	height: 1rpx;
 	background: $border-light;
-	margin-left: 88rpx;
+	margin-left: 96rpx;
 }
 
 /* 最近订单 */
@@ -279,15 +270,20 @@ export default {
 	font-size: $font-lg;
 	font-weight: 700;
 	color: $text-primary;
-	margin: 32rpx 8rpx 16rpx;
+	margin: 28rpx 8rpx 20rpx;
 }
 
 .my-order-card {
 	background: #fff;
 	border-radius: $radius-md;
-	padding: 24rpx 28rpx;
+	padding: 28rpx 28rpx;
 	margin-bottom: 16rpx;
 	box-shadow: $shadow-card;
+	transition: box-shadow 0.2s;
+
+	&:active {
+		box-shadow: $shadow-card-hover;
+	}
 }
 
 .order-card-header {
@@ -296,7 +292,7 @@ export default {
 	align-items: center;
 	margin-bottom: 16rpx;
 	padding-bottom: 16rpx;
-	border-bottom: 1rpx dashed $border-light;
+	border-bottom: 1rpx dashed #e5e7eb;
 }
 
 .order-card-time {
@@ -305,14 +301,31 @@ export default {
 }
 
 .order-card-status {
-	font-size: $font-sm;
+	font-size: 22rpx;
 	font-weight: 600;
+	padding: 4rpx 16rpx;
+	border-radius: $radius-sm;
 
-	&.status-1 { color: $brand-accent; }
-	&.status-2 { color: $brand-primary; }
-	&.status-3 { color: $brand-primary; }
-	&.status-4 { color: $brand-success; }
-	&.status-5 { color: $text-tertiary; }
+	&.status-1 {
+		color: $brand-accent;
+		background: #fef3c7;
+	}
+	&.status-2 {
+		color: $brand-primary;
+		background: $brand-primary-bg;
+	}
+	&.status-3 {
+		color: $brand-primary;
+		background: $brand-primary-bg;
+	}
+	&.status-4 {
+		color: $brand-success;
+		background: $brand-success-bg;
+	}
+	&.status-5 {
+		color: $text-tertiary;
+		background: #f3f4f6;
+	}
 }
 
 .order-card-items {
@@ -322,12 +335,13 @@ export default {
 .order-card-item {
 	display: flex;
 	justify-content: space-between;
-	padding: 8rpx 0;
+	padding: 10rpx 0;
 }
 
 .order-item-name {
 	font-size: $font-sm;
-	color: $text-secondary;
+	color: $text-primary;
+	font-weight: 400;
 }
 
 .order-item-num {
@@ -342,28 +356,33 @@ export default {
 }
 
 .order-card-total {
-	font-size: $font-sm;
+	font-size: 24rpx;
 	color: $text-secondary;
 
 	.total-price {
-		font-weight: 600;
-		color: $text-primary;
+		font-weight: 700;
+		color: $brand-accent;
+		font-size: 26rpx;
 	}
 }
 
 .order-card-again {
-	padding: 10rpx 28rpx;
-	border: 1rpx solid $brand-primary;
-	border-radius: 32rpx;
+	padding: 12rpx 32rpx;
+	background: linear-gradient(135deg, $brand-primary, #3b82f6);
+	border: none;
+	border-radius: $radius-round;
+	box-shadow: 0 4rpx 16rpx rgba($brand-primary, 0.25);
+	transition: all 0.2s;
 
 	text {
-		font-size: $font-sm;
-		color: $brand-primary;
-		font-weight: 500;
+		font-size: 24rpx;
+		color: #fff;
+		font-weight: 600;
 	}
 
 	&:active {
-		background: $brand-primary-bg;
+		transform: scale(0.95);
+		opacity: 0.9;
 	}
 }
 </style>

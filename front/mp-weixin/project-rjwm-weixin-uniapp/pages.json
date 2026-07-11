@@ -3,87 +3,98 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "速达外卖",
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black",
         "enablePullDownRefresh": false
       }
     },
     {
       "path": "pages/ai/index",
       "style": {
-        "navigationBarTitleText": "AI小速",
-        "navigationBarBackgroundColor": "#1a56db",
-        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black",
         "enablePullDownRefresh": false
       }
     },
     {
       "path": "pages/my/my",
       "style": {
-        "navigationBarTitleText": "个人中心",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#1a56db",
-        "navigationBarTextStyle": "white"
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black",
+        "enablePullDownRefresh": false
       }
     },
     {
       "path": "pages/order/index",
       "style": {
-        "navigationBarTitleText": "确认订单",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#1a56db",
-        "navigationBarTextStyle": "white"
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black",
+        "enablePullDownRefresh": false
       }
     },
     {
       "path": "pages/order/success",
       "style": {
-        "navigationBarTitleText": "提交成功",
-        "enablePullDownRefresh": false,
-        "navigationBarBackgroundColor": "#1a56db",
-        "navigationBarTextStyle": "white"
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black",
+        "enablePullDownRefresh": false
       }
     },
     {
       "path": "pages/address/address",
       "style": {
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "地址管理",
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black",
         "enablePullDownRefresh": false
       }
     },
     {
       "path": "pages/addOrEditAddress/addOrEditAddress",
       "style": {
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "编辑地址",
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black",
         "enablePullDownRefresh": false
       }
     },
     {
       "path": "pages/historyOrder/historyOrder",
       "style": {
-        "navigationBarTitleText": "历史订单",
-        "enablePullDownRefresh": true,
-        "navigationBarBackgroundColor": "#1a56db",
-        "navigationBarTextStyle": "white"
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/orderDetail/orderDetail",
+      "style": {
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black"
       }
     },
     {
       "path": "pages/nonet/index",
       "style": {
-        "navigationBarTitleText": "无网络",
-        "navigationBarBackgroundColor": "#1a56db",
-        "navigationBarTextStyle": "white"
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#f3f4f7",
+        "navigationBarTextStyle": "black"
       }
     }
   ],
   "globalStyle": {
-    "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "速达外卖",
-    "navigationBarBackgroundColor": "#1a56db",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "",
+    "navigationBarBackgroundColor": "#f3f4f7",
     "backgroundColor": "#f3f4f7",
-    "backgroundColorTop": "#1a56db",
+    "backgroundColorTop": "#f3f4f7",
     "backgroundColorBottom": "#f3f4f7"
   },
   "tabBar": {

@@ -1,7 +1,7 @@
 <template>
 	<view class="history-page">
 		<view class="history-list" v-if="recentOrdersList && recentOrdersList.length > 0">
-			<view class="order-card" v-for="(item, index) in recentOrdersList" :key="index">
+			<view class="order-card" v-for="(item, index) in recentOrdersList" :key="index" @click="goDetail(item.id)">
 				<view class="order-card-head">
 					<text class="order-time">{{ item.orderTime || item.checkoutTime }}</text>
 					<text class="order-status" :class="'status-' + item.status">{{ statusWord(item.status) }}</text>
@@ -65,7 +65,10 @@ export default {
 		}
 	},
 	methods: {
-		numes (list) {
+			goDetail (id) {
+				uni.navigateTo({ url: '/pages/orderDetail/orderDetail?id=' + id })
+			},
+			numes (list) {
 			let count = 0, total = 0
 			if (list && list.length > 0) {
 				list.forEach(obj => {

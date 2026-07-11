@@ -1,6 +1,5 @@
 <template>
 	<view class="address-page">
-		<uni-nav-bar @clickLeft="goBack" left-icon="back" leftIcon="arrowleft" title="地址管理" statusBar="true" fixed="true" color="#ffffff" backgroundColor="#1a56db"></uni-nav-bar>
 		<view class="address-content">
 			<view class="address-list" v-if="addressList && addressList.length > 0">
 				<view class="address-card" v-for="(item, index) in addressList" :key="index" @click="choseAddress(index, item)">
@@ -46,10 +45,8 @@
 <script>
 import { queryAddressBookList, putAddressBookDefault } from '../api/api.js'
 import { mapState } from 'vuex'
-import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 
 export default {
-	components: { uniNavBar },
 	data () {
 		return {
 			testValue: true,
@@ -64,14 +61,6 @@ export default {
 		...mapState(['addressBackUrl'])
 	},
 	methods: {
-		goBack () {
-			const pages = getCurrentPages()
-				if (pages.length > 1) {
-					uni.navigateBack()
-				} else {
-					uni.switchTab({ url: '/pages/my/my' })
-				}
-		},
 		getLableVal (item) {
 			const map = { '1': '公司', '2': '家', '3': '学校' }
 			return map[item] || '其他'

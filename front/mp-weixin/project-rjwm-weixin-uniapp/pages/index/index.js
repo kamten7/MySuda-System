@@ -1,4 +1,3 @@
-import NavBar from '../common/Navbar/navbar.vue'
 import DishCard from '@/components/dish-card/dish-card.vue'
 import AppEmpty from '@/components/app-empty/app-empty.vue'
 import AppLoading from '@/components/app-loading/app-loading.vue'
@@ -34,7 +33,6 @@ export default {
 			orderDishNumber: 0,
 			orderDishPrice: 0,
 			rightIdAndType: {},
-			navbarH: 0
 		}
 	},
 	computed: {
@@ -47,19 +45,11 @@ export default {
 		}
 	},
 	components: {
-		NavBar,
 		DishCard,
 		AppEmpty,
 		AppLoading
 	},
 	onLoad(options) {
-		// 计算导航栏高度（rpx转px的近似值）
-		try {
-			const res = uni.getMenuButtonBoundingClientRect()
-			this.navbarH = (res.top + res.height + 7) * 2 // 转rpx
-		} catch (e) {
-			this.navbarH = 160
-		}
 
 		uni.onNetworkStatusChange(function (res) {
 			if (res.isConnected == false) {
@@ -73,13 +63,6 @@ export default {
 		}
 	},
 	onShow() {
-		// 导航栏高度
-		try {
-			const res = uni.getMenuButtonBoundingClientRect()
-			this.navbarH = (res.top + res.height + 7) * 2
-		} catch (e) {
-			this.navbarH = 160
-		}
 		if (this.token) {
 			this.init()
 		}

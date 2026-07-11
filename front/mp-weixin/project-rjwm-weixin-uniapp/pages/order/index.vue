@@ -38,7 +38,7 @@
 					<text class="order-item-name">{{ obj.name }}</text>
 					<text class="order-item-qty">x{{ obj.number }}</text>
 				</view>
-				<text class="order-item-price">¥{{ obj.amount / 100 }}</text>
+				<text class="order-item-price">¥{{ obj.amount }}</text>
 			</view>
 		</view>
 
@@ -71,7 +71,7 @@
 			<text class="footer-total">
 				<text class="total-label">合计 </text>
 				<text class="total-symbol">¥</text>
-				<text class="total-value">{{ (orderDishPrice / 100 + 6).toFixed(2) }}</text>
+				<text class="total-value">{{ (orderDishPrice + 6).toFixed(2) }}</text>
 			</text>
 		</view>
 		<view class="order-footer-btn" @click="payOrderHandle">

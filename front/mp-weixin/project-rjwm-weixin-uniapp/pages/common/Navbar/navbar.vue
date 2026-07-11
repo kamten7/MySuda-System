@@ -3,7 +3,7 @@
 		<view class="navBar-inner">
 			<!-- 左侧品牌 -->
 			<view class="navBar-brand">
-				<image class="brand-logo" src="/static/logo_ruiji.png" mode="aspectFit" />
+				<image class="brand-logo" src="/static/logo_brand.svg" mode="aspectFit" />
 				<text class="brand-name">速达外卖</text>
 			</view>
 			<!-- 右侧购物车角标 -->

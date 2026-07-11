@@ -1,6 +1,5 @@
 <template>
 	<view class="addredit-page">
-		<uni-nav-bar @clickLeft="goBack" left-icon="back" leftIcon="arrowleft" :title="delId ? '编辑收货地址' : '新增收货地址'" statusBar="true" fixed="true" color="#ffffff" backgroundColor="#1a56db"></uni-nav-bar>
 		<view class="addredit-content">
 			<view class="form-card">
 				<view class="form-row">
@@ -57,10 +56,9 @@
 <script>
 import simpleAddress from '../common/simple-address/simple-address.nvue'
 import { addAddressBook, delAddressBook, queryAddressBookById, editAddressBook } from '../api/api.js'
-import uniNavBar from '@/components/uni-nav-bar/uni-nav-bar.vue'
 
 export default {
-	components: { simpleAddress, uniNavBar },
+		components: { simpleAddress },
 	data () {
 		return {
 			platform: 'ios',
@@ -173,7 +171,6 @@ export default {
 
 .addredit-content {
 	padding: 16rpx 24rpx;
-	padding-top: 100rpx;
 }
 
 .form-card {
