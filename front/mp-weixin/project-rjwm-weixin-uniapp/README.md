@@ -1,115 +1,217 @@
-<!-- ## 速达外卖 - 小程序  即（速达外卖）
+# 速达外卖 · 微信小程序
 
-#### 技术： 
-- uniapp + ws 
+> **Uni-app (Vue 2) + Vuex + SSE 流式 AI 点餐助手**
 
-#### 主要功能：
+速达外卖用户端微信小程序，支持微信授权登录、菜品浏览、**AI 智能点餐助手"小速"**（SSE 流式对话）、购物车、地址管理、在线微信支付、订单追踪与催单。
 
-- 授权获取微信信息 -> 扫二维码进入小程序  ->  获取桌台信息 和当前桌台的状态 -> 用桌台ID和店铺id  获取菜品分类和菜单 -> 操作加减菜品 和菜品详情(加减菜为多人点餐，使用ws 推送购物车信息)   ->  下单付款å
+---
 
-- 页面效果
+## 🛠 技术栈
 
+| 类别 | 技术 | 说明 |
+|------|------|------|
+| **框架** | Uni-app (Vue 2) + Vuex | 一套代码编译为微信小程序 |
+| **开发工具** | HBuilderX | IDE，编译运行到微信开发者工具 |
+| **样式** | SCSS + rpx 单位 | 蓝色系设计系统，基于 750rpx 设计稿 |
+| **导航** | TabBar（3 Tab：首页/AI小速/我的） | 底部固定导航 |
+| **AI 通信** | SSE 流式（wx.request enableChunked） | 实时流式 AI 对话，基础库 ≥ 2.20.1 |
+| **HTTP** | 封装 request.js | JWT authentication header，`authentication` 令牌 |
+| **Vuex** | store/index.js | 全局状态（AI 会话、订单列表、用户 Token） |
 
-<img src="./design/action.gif" width= "24%" />
-<img src="./design/index.png" width= "24%" />
-<img src="./design/dish.png" width= "24%" />
-<img src="./design/detail.png" width= "24%" /> -->
+---
 
+## 📁 项目结构
 
-#### 速达外卖小程序流程说明
+```
+project-rjwm-weixin-uniapp/
+├── pages/
+│   ├── api/api.js              → 所有 API 接口定义（含 AI 相关 4 个）
+│   ├── index/                  → 首页：分类侧边栏 + 菜品列表 + 购物车弹窗
+│   ├── ai/index.vue            → 🆕 AI 聊天页：SSE 流式对话 + 快捷提问 + 菜品推荐卡片
+│   ├── my/my.vue               → 个人中心：地址管理、历史订单、最近订单
+│   ├── order/                  → 确认订单页 + 下单成功页
+│   ├── historyOrder/           → 历史订单（分页加载）
+│   ├── address/address.vue     → 地址列表
+│   ├── addOrEditAddress/       → 新增/编辑地址
+│   ├── nonet/index.vue         → 无网络页
+│   └── common/
+│       ├── Navbar/             → 自定义导航栏组件（渐变蓝背景）
+│       └── simple-address/     → 省市区三级联动选择器
+│
+├── components/
+│   ├── app-loading/            → 🆕 全屏加载遮罩
+│   ├── app-empty/              → 🆕 空状态插画 + 提示文字
+│   ├── app-skeleton/           → 🆕 骨架屏（菜品列表/分类/卡片/文本）
+│   ├── dish-card/              → 🆕 菜品卡片（图片+信息+加减按钮）
+│   ├── chat-bubble/            → 🆕 AI 聊天气泡（用户蓝底/AI 白底灰边）
+│   ├── chat-input/             → 🆕 AI 聊天输入区
+│   ├── empty/                  → 旧空状态组件（保留）
+│   ├── reach-bottom/           → 上拉加载更多指示器
+│   ├── uni-icons/              → uni-app 图标组件
+│   ├── uni-nav-bar/            → uni-app 导航栏组件
+│   └── uni-status-bar/         → uni-app 状态栏组件
+│
+├── utils/
+│   ├── env.js                  → API baseUrl 配置
+│   ├── request.js              → HTTP 请求封装（JWT authentication header）
+│   ├── stream.js               → 🆕 SSE 流式请求（wx.request + enableChunked）
+│   ├── webscoket.js            → WebSocket 封装
+│   └── stomp.js                → STOMP 协议库
+│
+├── store/index.js              → Vuex 状态管理（含 AI 会话状态）
+├── pages.json                  → 🆕 路由 + 3 TabBar 配置
+├── uni.scss                    → 🆕 蓝色系设计 Token（品牌色/间距/圆角/动画）
+├── App.vue                     → 🆕 全局样式 + 动画 keyframes
+└── manifest.json               → 应用配置（AppID 等）
+```
 
-### 注册小程序AppID相关流程
----百度搜索[微信公众平台](https://mp.weixin.qq.com/),没有账号需要进行注册，进行扫码登录
-![](./image/账号.png)
-找到开发管理
-![](./image/kaifa.png)
+---
 
-![](./image/guanli.png)
-**注意：** appid生成，项目开发过程中要使用，或者临时使用测试号（后边介绍）
-![](./image/appid.png)
+## 🎯 TabBar 导航
 
+| Tab | 页面 | 图标 | 说明 |
+|-----|------|------|------|
+| 🏠 首页 | `pages/index/index` | 房屋 | 分类浏览 + 菜品列表 + 购物车 |
+| 🤖 AI小速 | `pages/ai/index` | 对话 | SSE 流式 AI 对话 + 智能点餐 |
+| 👤 我的 | `pages/my/my` | 用户 | 个人中心 + 地址 + 历史订单 |
 
-##### uni-app介绍 [官方网页](https://uniapp.dcloud.io/resource)
+---
 
-`uni-app` 是一个使用 [Vue.js](https://vuejs.org/) 开发所有前端应用的框架，开发者编写一套代码，可发布到iOS、Android、H5、以及各种小程序（微信/支付宝/百度/头条/QQ/钉钉）等多个平台。
+## 🤖 AI 智能点餐助手"小速"
 
-即使不跨端，`uni-app`同时也是更好的小程序开发框架。
+在 **AI小速** Tab 中与 AI 对话，实现自然语言点餐。
 
-具有vue和微信小程序的开发经验，可快速上手uni-app
+### 功能特性
 
-为什么要去学习uni-app？
+- **SSE 流式对话**: 逐字输出，模仿主流大模型聊天体验
+- **快捷提问**: 预设推荐问题（"帮我推荐几道菜"、"有什么招牌菜？"等）
+- **菜品推荐卡片**: AI 推荐的菜品以卡片形式展示，支持查看详情和加入购物车
+- **时间感知**: 自动识别早/午/晚餐时段，推荐对应餐次
+- **场景推荐**: 根据用户描述的场景（天热/天冷/减肥/聚会）智能推荐
 
-相对开发者来说，减少了学习成本，因为只学会uni-app之后，即可开发出iOS、Android、H5、以及各种小程序的应用，不需要再去学习开发其他应用的框架，相对公司而言，也大大减少了开发成本。
+### AI API 端点
 
-##### 环境搭建
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/user/ai/chat` | 同步 AI 对话 |
+| POST | `/user/ai/chat/stream` | SSE 流式 AI 对话（120s 超时） |
+| GET | `/user/ai/cart/status` | 获取购物车状态 |
+| DELETE | `/user/ai/history/{sessionId}` | 清空对话历史 |
 
-安装编辑器HbuilderX  [下载地址](https://www.dcloud.io/hbuilderx.html)
+### 技术实现
 
-HBuilderX是通用的前端开发工具，但为`uni-app`做了特别强化。
+小程序端通过 `utils/stream.js` 封装 SSE 请求：
 
-下载App开发版，可开箱即用
+```javascript
+// 使用 wx.request 的 enableChunked 模式实现流式读取
+wx.request({
+  url: baseUrl + '/user/ai/chat/stream',
+  method: 'POST',
+  enableChunked: true,    // 开启分块传输
+  data: { message: question, sessionId: '' },
+  success: (res) => {
+    // 处理流式数据，逐字输出
+  }
+})
+```
 
-安装微信开发者工具 [下载地址](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)
+要求微信基础库 **≥ 2.20.1**。
 
-##### 利用HbuilderX初始化项目
+---
 
-+ 点击HbuilderX菜单栏文件>项目>新建
+## 🎨 设计系统
 
-+ 选择uni-app,填写项目名称，项目创建的目录
+与管理端统一的蓝色品牌色系。
 
-  ![](./images/create.jpg)
+### 品牌色彩
 
+| Token | 色值 | 用途 |
+|-------|------|------|
+| 品牌主色 | `#1a56db` | 导航栏、按钮、选中态 |
+| 品牌深色 | `#1e40af` | 按钮按下态 |
+| 品牌浅蓝 | `#eff6ff` / `#dbeafe` | 卡片浅蓝底、选中背景 |
+| 强调色 | `#f59e0b` | 价格颜色、标签 |
+| 成功绿 | `#10b981` | 订单完成 |
+| 危险红 | `#ef4444` | 删除、角标 |
+| 页面背景 | `#f3f4f7` | 全局底色 |
+| 卡片背景 | `#fff` | 卡片、列表项 |
 
-##### 运行项目
+### 卡片规范
 
-## ---新建项目
+| 属性 | 值 |
+|------|-----|
+| 圆角 | `16rpx` |
+| 阴影 | `0 4rpx 24rpx rgba(0,0,0,0.06)` |
+| 内边距 | `24rpx` |
+| 悬浮阴影 | `0 8rpx 32rpx rgba(0,0,0,0.10)` |
 
-在菜单栏中点击运行，运行到浏览器，选择浏览器即可运行
+### 导航栏渐变
 
-在微信开发者工具里运行：进入hello-uniapp项目，点击工具栏的运行 -> 运行到小程序模拟器 -> 微信开发者工具，即可在微信开发者工具里面体验uni-app
+```css
+linear-gradient(135deg, #1e3a8a 0%, #1a56db 100%)
+```
 
-在微信开发者工具里运行：进入hello-uniapp项目，点击工具栏的运行 -> 运行到手机或模拟器 -> 选择调式的手机
+---
 
-![](./image/weixinyunxing.png)
-**注意：**
+## 📱 主要功能模块
 
-+ 如果是第一次使用，需要先配置小程序ide的相关路径，才能运行成功
-+ 微信开发者工具在设置中安全设置，服务端口开启
-![](./image/duankouhao.png)
+### 首页
 
-## ---导入项目
-在菜单栏中点击文件，选择导入，选择从本地目录导入
-![](./image/yunxing.png)
+- **分类侧边栏**: 左侧菜品分类列表，右侧对应菜品卡片
+- **菜品卡片**: 图片 + 名称 + 价格 + 月售数量，点击可查看详情和口味选择
+- **购物车弹窗**: 底部弹出购物车，支持增减数量、清空
+- **店铺状态**: 顶部显示营业中/休息中状态
 
-![](./image/ceshihao.png)
+### AI小速
 
-##### 介绍项目目录和文件作用
+- **聊天界面**: 用户消息蓝色气泡靠右，AI 回复白色气泡靠左
+- **打字机效果**: SSE 流式逐字输出，等待状态动画
+- **快捷提问**: 底部预设推荐问题按钮
+- **菜品推荐卡片**: AI 返回的菜品信息以卡片形式嵌入对话流
 
-`pages.json` 文件用来对 uni-app 进行全局配置，决定页面文件的路径、窗口样式、原生的导航栏、底部的原生tabbar 等
+### 我的
 
-`manifest.json` 文件是应用的配置文件，用于指定应用的名称、图标、权限等。
+- **用户信息**: 头像 + 昵称
+- **地址管理**: 新增/编辑/删除收货地址，省市区三级联动
+- **历史订单**: 分页加载，彩色状态标签
+- **再来一单**: 复制历史订单菜品到购物车
 
-`App.vue`是我们的跟组件，所有页面都是在`App.vue`下进行切换的，是页面入口文件，可以调用应用的生命周期函数。
+### 订单流程
 
-`main.js`是我们的项目入口文件，主要作用是初始化`vue`实例并使用需要的插件。
+```
+首页选择菜品 → 加入购物车 → 确认订单页（选择地址）
+    → 微信支付 → 支付成功 → 订单追踪
+```
 
-`uni.scss`文件的用途是为了方便整体控制应用的风格。比如按钮颜色、边框风格，`uni.scss`文件里预置了一批scss变量预置。
+---
 
-```unpackage``` 就是打包目录，在这里有各个平台的打包文件
+## 🔧 开发指南
 
-```pages``` 所有的页面存放目录
+### 运行环境
 
-```static``` 静态资源目录，例如图片等
+1. 安装 **HBuilderX**（[下载地址](https://www.dcloud.io/hbuilderx.html)）
+2. 安装 **微信开发者工具**（[下载地址](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)）
+3. 用 HBuilderX 打开项目目录
 
-```components``` 组件存放目录
+### 运行步骤
 
-为了实现多端兼容，综合考虑编译速度、运行性能等因素，`uni-app` 约定了如下开发规范：
+1. HBuilderX → 文件 → 导入 → 选择 `front/mp-weixin/project-rjwm-weixin-uniapp`
+2. 运行 → 运行到小程序模拟器 → 微信开发者工具
+3. 微信开发者工具勾选 **"不校验合法域名"**
+4. 确保后端 `localhost:8080` 已启动
 
-- 页面文件遵循 [Vue 单文件组件 (SFC) 规范](https://vue-loader.vuejs.org/zh/spec.html)
-- 组件标签靠近小程序规范，详见[uni-app 组件规范](https://uniapp.dcloud.io/component/README)
-- 数据绑定及事件处理同 `Vue.js` 规范，同时补充了App及页面的生命周期
-- 为兼容多端运行，建议使用flex布局进行开发
+### 注意事项
 
+- **无 npm 依赖**: 本项目不使用 `package.json`，所有依赖来自 HBuilderX IDE 工具链
+- **rpx 单位**: 所有尺寸使用 `rpx`，基于 750rpx 设计稿（1rpx = 屏幕宽度/750）
+- **支付功能**: 个人微信账号资质无法发起微信支付，需要企业资质
+- **开发环境 API**: 后端 baseUrl 配置在 `utils/env.js`，默认 `localhost:8080`
+- **微信支付回调**: 开发环境使用 Cpolar 内网穿透使微信服务器能回调到本地
 
-#### 关于支付功能说明
-**注意：** 开发过程中使用的个人微信账号，资质为个人不能发起微信支付相关功能，需要企业资质才可以发起微信支付相关功能
+---
+
+## 📄 相关文档
+
+- [根项目 README](../../README.md) — 项目整体介绍
+- [后端 README](../../backend/suda-take-out/README.md) — 后端详细说明
+- [管理端 README](../../project-suda-admin-vue3/README.md) — 管理端详细说明
