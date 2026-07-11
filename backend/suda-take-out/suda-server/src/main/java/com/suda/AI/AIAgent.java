@@ -32,7 +32,7 @@ public class AIAgent {
     @Value("${suda.ai.deepseek.base-url:https://api.deepseek.com/v1}")
     private String baseUrl;
 
-    @Value("${suda.ai.deepseek.model-name:deepseek-chat}")
+    @Value("${suda.ai.deepseek.model-name:deepseek-v4-flash}")
     private String modelName;
 
     // ==================== 流式模型 ====================

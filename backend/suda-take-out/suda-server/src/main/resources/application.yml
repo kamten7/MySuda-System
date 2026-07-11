@@ -2,16 +2,6 @@ server:
   port: 8080
 
 spring:
-  ai:
-    openai:
-      api-key: sk-b1c09989464b49f8ae74c10d0a3e8a61
-      base-url: https://api.deepseek.com
-      chat:
-          options:
-            model: deepseek-chat
-            temperature: 0.7
-            max-tokens: 2000
-
   profiles:
     active: dev
   main:
@@ -52,6 +42,7 @@ mybatis:
 
 logging:
   level:
+    org.springframework.jcl: warn
     com:
       suda:
         mapper: debug
@@ -87,16 +78,3 @@ suda:
     address: 广东省湛江市霞山区国贸大厦A105号
   baidu:
     ak: ${SUDA_BAIDU_AK}
-
-langchain4j:
-  open-ai:
-    chat-model:
-      base-url: https://api.deepseek.com/v1
-      api-key: YOUR_DEEPSEEK_API_KEY
-      model-name: deepseek-chat
-      timeout: 60000
-    streaming-chat-model:
-      base-url: https://api.deepseek.com/v1
-      api-key: YOUR_DEEPSEEK_API_KEY
-      model-name: deepseek-chat
-      timeout: 60000

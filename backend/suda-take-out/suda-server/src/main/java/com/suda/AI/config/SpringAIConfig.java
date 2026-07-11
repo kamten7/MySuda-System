@@ -8,6 +8,9 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.model.function.FunctionCallback;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,21 +19,39 @@ import java.util.List;
 /**
  * Spring AI 1.0.0-M5 配置
  *
- * <p>使用 {@link FunctionCallback} 包装工具类方法。通过 Spring 的
- * {@code List<FunctionCallback>} 自动收集所有 FunctionCallback Bean，
- * 统一注册到 {@link ChatClient} 中。</p>
+ * <p>手动创建 OpenAiChatModel 对接 DeepSeek 官方 API（OpenAI 兼容格式），
+ * 使用 @ConditionalOnMissingBean 覆盖 Spring AI 的自动配置。</p>
  *
- * <p>这样避免了逐个注入同类型 Bean 时依赖 -parameters 编译参数的隐患。
- * 新增工具只需添加对应的 {@link FunctionCallback} {@code @Bean} 即可自动生效。</p>
+ * <p>⚠️ Base URL 不能带 /v1 后缀，OpenAiApi 内部会自动拼接 /v1/chat/completions。</p>
+ * <p>⚠️ 模型使用 deepseek-v4-flash（最便宜，新用户有 500 万免费 token）。</p>
  */
 @Configuration
 public class SpringAIConfig {
 
+    @Value("${spring.ai.openai.api-key}")
+    private String apiKey;
+
+    @Value("${spring.ai.openai.chat.base-url:https://api.deepseek.com}")
+    private String baseUrl;
+
+    /**
+     * 手动创建 OpenAiApi + OpenAiChatModel，覆盖 Spring AI 自动配置。
+     * OpenAiApi(String baseUrl, String apiKey) — 内部自动拼接 /v1/chat/completions。
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    public OpenAiChatModel openAiChatModel() {
+        OpenAiApi openAiApi = new OpenAiApi(baseUrl, apiKey);
+        return new OpenAiChatModel(openAiApi,
+                OpenAiChatOptions.builder()
+                        .model("deepseek-v4-flash")
+                        .temperature(0.7)
+                        .maxTokens(3000)
+                        .build());
+    }
+
     /**
      * 构建 ChatClient，自动收集上下文中所有 {@link FunctionCallback} Bean。
-     *
-     * @param chatModel        Spring AI OpenAI 聊天模型
-     * @param functionCallbacks 所有注册的 FunctionCallback Bean（自动按类型收集）
      */
     @Bean
     public ChatClient chatClient(OpenAiChatModel chatModel,
@@ -38,7 +59,7 @@ public class SpringAIConfig {
 
         return ChatClient.builder(chatModel)
                 .defaultOptions(OpenAiChatOptions.builder()
-                        .model("deepseek-chat")
+                        .model("deepseek-v4-flash")
                         .temperature(0.7)
                         .maxTokens(3000)
                         .build())

@@ -43,6 +43,10 @@ public class adminShopController {
     public Result<Integer> getStatus() {
         log.info("获取到营业状态");
         Integer status = (Integer) redisTemplate.opsForValue().get(KEY);
+        // Redis中无此key时返回null，默认为营业中
+        if (status == null) {
+            status = 1;
+        }
         log.info("营业状态为：{}", status == 1 ? "营业中" : "打样中");
         return Result.success(status);
     }
