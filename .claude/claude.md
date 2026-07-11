@@ -6,7 +6,7 @@
 
 | 子项目 | 目录 | 说明 |
 |--------|------|------|
-| **后端服务** | `backend/suda-take-out/` | Spring Boot 3.4.3 + MyBatis + MySQL + Redis |
+| **后端服务** | `backend/suda-take-out/` | Spring Boot 3.4.3 + MyBatis + MySQL + Redis + Spring AI |
 | **管理端** | `front/project-suda-admin-vue3/` | Vue 3 + Vite + Element Plus + Tailwind + Pinia |
 | **小程序端** | `front/mp-weixin/project-rjwm-weixin-uniapp/` | Uni-app (Vue 2) 微信小程序 |
 
@@ -53,6 +53,20 @@ backend/suda-take-out/
 ├── suda-common/   → 工具类、常量、异常、Result/PageResult、BaseContext
 ├── suda-pojo/     → entity、dto、vo
 └── suda-server/   → controller、service、mapper、config、interceptor、aspect、task、websocket、AI/
+    ├── com.suda
+    │   ├── AI/                → Spring AI 集成层
+    │   │   ├── config/        → SpringAIConfig（ChatClient + 16个FunctionCallback）
+    │   │   └── tools/         → UserAITools/DishTools/RecommendTools/CartTools
+    │   ├── controller/
+    │   │   ├── admin/         → 管理端接口（含 AdminAIController）
+    │   │   ├── user/          → 用户端接口（含 UserAIController）
+    │   │   └── notify/        → 支付回调
+    │   ├── service/
+    │   │   ├── AIService.java             → 管理端 AI 诊断服务
+    │   │   ├── UserAIService.java         → 用户端 AI 点餐服务
+    │   │   ├── BusinessToolService.java   → AI 经营数据分析工具
+    │   │   └── impl/                      → 服务实现
+    │   └── ...
 ```
 
 ## 管理端前端架构
@@ -62,6 +76,24 @@ backend/suda-take-out/
 - 品牌色深蓝 `#1a56db`，强调色琥珀 `#f59e0b`
 - 暗色模式 `html.dark` CSS 全覆盖
 - 登录页 Canvas 粒子动画
+- **AI 智能分析页**: `src/views/ai/index.vue`，LangChain4j SSE 流式问答 + 经营诊断
+- **AI API 模块**: `src/api/modules/ai.ts`，原生 fetch SSE 流式读取
+
+### 路由配置
+
+| 路径 | 页面 | 说明 |
+|------|------|------|
+| `/login` | 登录页 | Canvas 粒子背景 |
+| `/client-login` | 客户端登录 | C 端用户登录入口 |
+| `/dashboard` | 工作台 | KPI 卡片 + 图表概览 |
+| `/statistics` | 数据统计 | ECharts 可视化 + Excel 导出 |
+| `/order` | 订单管理 | 7 状态 Tab + 搜索筛选 |
+| `/dish` | 菜品管理 | CRUD + 图片上传 + 口味 |
+| `/setmeal` | 套餐管理 | CRUD + 图片上传 + 菜品选择 |
+| `/category` | 分类管理 | CRUD + 排序 + 启用/禁用 |
+| `/employee` | 员工管理 | CRUD + 管理员保护 |
+| `/message` | 消息通知 | WebSocket 实时推送 |
+| `/ai` | AI 智能分析 | SSE 流式问答 + 经营诊断 |
 
 ## 小程序端架构
 
@@ -147,11 +179,14 @@ front/mp-weixin/project-rjwm-weixin-uniapp/
 - `com.suda.AI.tools.RecommendTools` — 智能推荐工具
 - `com.suda.AI.tools.CartTools` — 购物车操作工具
 - `com.suda.service.impl.UserAIServiceImpl` — 用户 AI 服务实现
+- `com.suda.controller.user.UserAIController` — 用户端 AI 控制器（同步/流式对话）
+- `com.suda.controller.admin.AdminAIController` — 管理端 AI 控制器（自然语言查询/经营诊断）
 
 **架构要点**：
 - ChatClient 用 `List<FunctionCallback>` 自动收集所有 Bean，新增工具只需加 `@Bean` 即可自动生效
 - AI 会话存储在 Redis：key `ai:session:user:{userId}`，TTL 2 天，最多 50 轮
 - System Prompt 中 AI 名叫"小速"，遵循"推荐→询问→确认→操作"流程
+- 管理端 AI 使用 LangChain4j，通过 `BusinessToolService` 提供经营数据查询工具
 
 **用户端 AI API**：
 | 方法 | 路径 | 说明 |
@@ -160,6 +195,12 @@ front/mp-weixin/project-rjwm-weixin-uniapp/
 | POST | `/user/ai/chat/stream` | SSE 流式对话（120s 超时） |
 | GET | `/user/ai/cart/status` | 获取购物车状态 |
 | DELETE | `/user/ai/history/{sessionId}` | 清空对话历史 |
+
+**管理端 AI API**：
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/admin/ai/query/stream` | 自然语言数据查询（SSE 流式） |
+| POST | `/admin/ai/diagnose` | 一键经营诊断报告（SSE 流式） |
 
 ### 小程序 SSE 流式请求
 
