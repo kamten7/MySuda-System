@@ -99,7 +99,7 @@ suda-take-out/
 | 地图 API | 百度地图 API | — | 地址地理编码 + 路线规划 + 配送范围校验 |
 | **AI 集成** | **Spring AI** | **1.0.0-M5** | **用户端 AI 点餐：ChatClient + 16 个 FunctionCallback** |
 | **AI 集成** | **LangChain4j** | **1.6.0** | **管理端 AI 运营诊断** |
-| **LLM** | **DeepSeek Chat** | **—** | **大语言模型（api.deepseek.com）** |
+| **LLM** | **DeepSeek V4 Flash** | **—** | **大语言模型（api.deepseek.com）** |
 | 工具类 | Commons Lang3 | 3.17.0 | 常用工具方法 |
 | 简化代码 | Lombok | 1.18.36 | 自动生成 getter/setter/构造器 |
 | 内网穿透 | Cpolar | — | 开发环境微信回调穿透 |

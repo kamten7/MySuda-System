@@ -84,6 +84,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/message/index.vue'),
         meta: { title: '消息通知', icon: 'Bell' },
       },
+      {
+        path: 'ai',
+        name: 'AIChat',
+        component: () => import('@/views/ai/index.vue'),
+        meta: { title: 'AI智能分析', icon: 'ChatDotRound' },
+      },
     ],
   },
   {

@@ -111,7 +111,7 @@
 ┌────────────────────────────┴──────────────────────────────────────────────────────┐
 │                          基础设施层 (Infrastructure)                                │
 ├────────────────────────────────────────────────────────────────────────────────────┤
-│  MySQL 8.0+    Redis 5.0+(port 6380)    MinIO/OSS    微信支付    DeepSeek API     │
+│  MySQL 8.0+    Redis 5.0+(port 6380)    MinIO/OSS    微信支付    DeepSeek 官方 API     │
 └────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -138,9 +138,10 @@
 | **JSON** | Fastjson2 | 2.0.53 | 高性能序列化 |
 | **Excel** | Apache POI | 5.4.0 | 运营报表导出 |
 | **微信支付** | wechatpay-apiv3 | 0.4.8 | 微信支付 V3 API |
-| **AI 集成** | Spring AI | 1.0.0-M5 | 用户端 AI 点餐：16 个 FunctionCallback 工具 |
+| **AI 集成** | Spring AI | 1.0.0-M5 | 用户端 AI 点餐：16 个 FunctionCallback 工具（对接 DeepSeek 官方 API） |
 | **AI 集成** | LangChain4j | 1.6.0 | 管理端 AI 运营诊断 |
-| **LLM** | DeepSeek Chat | — | 大语言模型（api.deepseek.com） |
+| **LLM** | DeepSeek V4 Flash | — | 大语言模型（OpenAI 兼容协议） |
+| **AI 提供商** | DeepSeek | — | OpenAI 兼容协议，base-url: `https://api.deepseek.com` |
 | **工具库** | Lombok / Commons Lang3 | 1.18.36 / 3.17.0 | 简化开发 |
 
 ### 管理端前端
@@ -401,7 +402,7 @@ SUDAWAIMAI/
 │           │   ├── addOrEditAddress/     #     新增/编辑地址
 │           │   ├── nonet/                #     无网络页
 │           │   └── common/
-│           │       ├── Navbar/           #     自定义导航栏（渐变蓝背景）
+│           │       ├── Navbar/           #     自定义导航栏（已废弃，不再使用）
 │           │       └── simple-address/   #     三级地址选择器
 │           ├── components/
 │           │   ├── app-loading/          #     🆕 全屏加载

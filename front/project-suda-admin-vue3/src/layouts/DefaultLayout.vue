@@ -34,7 +34,7 @@ import AppBreadcrumb from '@/components/layout/AppBreadcrumb.vue'
 
 const appStore = useAppStore()
 
-const cachedViews = computed(() => ['Dashboard', 'Statistics', 'OrderList', 'DishList', 'SetmealList', 'Category', 'EmployeeList', 'MessageCenter'])
+const cachedViews = computed(() => ['Dashboard', 'Statistics', 'OrderList', 'DishList', 'SetmealList', 'Category', 'EmployeeList', 'MessageCenter', 'AIChat'])
 </script>
 
 <style lang="scss" scoped>
