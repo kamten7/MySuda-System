@@ -3,10 +3,12 @@ package com.suda.AI.tools;
 import com.suda.entity.Category;
 import com.suda.entity.Dish;
 import com.suda.entity.DishFlavor;
+import com.suda.entity.UserSession.RecommendedDish;
 import com.suda.service.CategoryService;
 import com.suda.service.DishService;
 import com.suda.vo.DishVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -16,13 +18,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 菜品查询工具 —— 供 AI 助手调用，提供菜品搜索、详情、分类、热门排行等能力。
- *
- * <p>方法通过 {@link org.springframework.ai.model.function.FunctionCallback} 注册到 ChatClient。
- * 每个 public 方法对应一个 AI 可调用的工具函数。</p>
+ * 菜品查询工具 —— 纯 Java 工具类，由 {@code UserAIIntentService} 直接调用来搜索菜品和分类。
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DishTools {
 
     private final DishService dishService;
@@ -82,8 +82,10 @@ public class DishTools {
             DishVO d = dishes.get(i);
             String desc = d.getDescription() != null && !d.getDescription().isEmpty()
                     ? " — " + d.getDescription() : "";
-            result.append(String.format("%d. %s  ¥%.2f%s\n", i + 1, d.getName(), d.getPrice(), desc));
+            result.append(String.format("%d. %s  ¥%.2f [ID:%d]%s\n",
+                    i + 1, d.getName(), d.getPrice(), d.getId(), desc));
         }
+
         return result.toString();
     }
 
@@ -102,12 +104,13 @@ public class DishTools {
         }
 
         return String.format("""
-                        📋 菜品详情
+                        📋 菜品详情 [ID:%d]
                         名称：%s
                         价格：¥%.2f
                         分类：%s
                         口味：%s
                         描述：%s""",
+                dishId,
                 dish.getName(),
                 dish.getPrice(),
                 categoryName != null ? categoryName : "未分类",
@@ -158,8 +161,10 @@ public class DishTools {
         StringBuilder result = new StringBuilder("🔥 热门菜品推荐：\n");
         for (int i = 0; i < dishes.size(); i++) {
             DishVO d = dishes.get(i);
-            result.append(String.format("%d. %s — ¥%.2f\n", i + 1, d.getName(), d.getPrice()));
+            result.append(String.format("%d. %s — ¥%.2f [ID:%d]\n",
+                    i + 1, d.getName(), d.getPrice(), d.getId()));
         }
+
         return result.toString();
     }
 
@@ -190,12 +195,46 @@ public class DishTools {
 
         StringBuilder result = new StringBuilder(String.format("¥%.0f ~ ¥%.0f 的菜品：\n", min, max));
         for (DishVO d : dishes) {
-            result.append(String.format("- %s  ¥%.2f\n", d.getName(), d.getPrice()));
+            result.append(String.format("- %s  ¥%.2f [ID:%d]\n", d.getName(), d.getPrice(), d.getId()));
         }
+
         return result.toString();
     }
 
     // ==================== 内部辅助方法 ====================
+
+    /**
+     * 按名称精确匹配菜品（用于加购兜底——从 AI 生成的文本中提取菜名后查找真实ID）。
+     * 返回匹配菜品的 ID 列表，未匹配到返回空列表。
+     */
+    public List<RecommendedDish> findDishesByNames(java.util.List<String> names) {
+        if (names == null || names.isEmpty()) {
+            return java.util.Collections.emptyList();
+        }
+
+        Dish dish = new Dish();
+        dish.setStatus(1);
+        List<DishVO> allDishes = dishService.listWithFlavor(dish);
+
+        List<RecommendedDish> found = new java.util.ArrayList<>();
+        for (String name : names) {
+            String normalized = name.trim().toLowerCase();
+            for (DishVO d : allDishes) {
+                if (d.getName() != null && d.getName().toLowerCase().contains(normalized)) {
+                    found.add(new RecommendedDish(
+                            d.getId(), null, d.getName(),
+                            d.getPrice() != null ? d.getPrice().doubleValue() : null));
+                    break; // 找到第一个匹配就停止
+                }
+            }
+        }
+
+        if (!found.isEmpty()) {
+            log.info("名称匹配兜底找到 {} 道菜品: {}", found.size(),
+                    found.stream().map(RecommendedDish::getName).collect(Collectors.toList()));
+        }
+        return found;
+    }
 
     private String flattenFlavors(List<DishFlavor> flavors) {
         if (flavors == null || flavors.isEmpty()) return "";

@@ -2,22 +2,23 @@ package com.suda.AI.tools;
 
 import com.suda.entity.Category;
 import com.suda.entity.Dish;
+import com.suda.entity.UserSession.RecommendedDish;
 import com.suda.service.CategoryService;
 import com.suda.service.DishService;
 import com.suda.vo.DishVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 智能推荐工具 —— 根据用户偏好、场景（天气/季节/心情）推荐菜品。
- *
- * <p>方法通过 {@link org.springframework.ai.model.function.FunctionCallback} 注册到 ChatClient。</p>
+ * 智能推荐工具 —— 纯 Java 工具类，由 {@code UserAIIntentService} 直接调用，根据用户偏好和场景推荐菜品。
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RecommendTools {
 
     private final DishService dishService;
@@ -92,11 +93,12 @@ public class RecommendTools {
         for (int i = 0; i < diverse.size(); i++) {
             DishVO d = diverse.get(i);
             String reason = buildRecommendReason(d, flavorPreference, scenario);
-            result.append(String.format("%d. %s — ¥%.2f（%s）\n",
-                    i + 1, d.getName(), d.getPrice(), reason));
+            result.append(String.format("%d. %s — ¥%.2f [ID:%d]（%s）\n",
+                    i + 1, d.getName(), d.getPrice(), d.getId(), reason));
         }
 
         result.append("\n需要我帮您把喜欢的菜品加入购物车吗？");
+
         return result.toString();
     }
 
@@ -123,9 +125,10 @@ public class RecommendTools {
 
         StringBuilder result = new StringBuilder(String.format("💰 为您推荐 ¥%.0f 以下的实惠菜品：\n", price));
         for (DishVO d : dishes) {
-            result.append(String.format("- %s（¥%.2f）\n", d.getName(), d.getPrice()));
+            result.append(String.format("- %s（¥%.2f）[ID:%d]\n", d.getName(), d.getPrice(), d.getId()));
         }
         result.append("\n需要帮您加入购物车吗？");
+
         return result.toString();
     }
 

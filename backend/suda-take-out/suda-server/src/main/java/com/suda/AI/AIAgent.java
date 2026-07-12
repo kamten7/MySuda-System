@@ -7,6 +7,7 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,17 +27,21 @@ import java.time.Duration;
 @Configuration
 public class AIAgent {
 
-    @Value("${suda.ai.deepseek.api-key}")
+    @Value("${suda.langchain4j.open-ai.streaming-chat-model.api-key}")
     private String apiKey;
 
-    @Value("${suda.ai.deepseek.base-url:https://api.deepseek.com/v1}")
+    @Value("${suda.langchain4j.open-ai.streaming-chat-model.base-url}")
     private String baseUrl;
 
-    @Value("${suda.ai.deepseek.model-name:deepseek-v4-flash}")
+    @Value("${suda.langchain4j.open-ai.streaming-chat-model.model-name}")
     private String modelName;
 
     // ==================== 流式模型 ====================
 
+
+    /**
+     * 创建 OpenAI 流式聊天模型 Bean（对接 Agnes AI）—— 管理端专用（temperature=0.1）。
+     */
     @Bean
     public OpenAiStreamingChatModel openAiStreamingChatModel() {
         return OpenAiStreamingChatModel.builder()
@@ -44,6 +49,20 @@ public class AIAgent {
                 .apiKey(apiKey)
                 .modelName(modelName)
                 .temperature(0.1)       // 0=最确定，避免 AI 自由发挥
+                .timeout(Duration.ofSeconds(120))
+                .build();
+    }
+
+    /**
+     * 用户端流式聊天模型 —— 与管理员端共用同一个 API，但 temperature 更高以支持自然对话。
+     */
+    @Bean
+    public OpenAiStreamingChatModel userStreamingChatModel() {
+        return OpenAiStreamingChatModel.builder()
+                .baseUrl(baseUrl)
+                .apiKey(apiKey)
+                .modelName(modelName)
+                .temperature(0.7)       // 更高温度适合对话
                 .timeout(Duration.ofSeconds(120))
                 .build();
     }
@@ -73,7 +92,7 @@ public class AIAgent {
 
     @Bean
     public StreamQueryAssistant streamQueryAssistant(
-            OpenAiStreamingChatModel streamingChatModel,
+            @Qualifier("openAiStreamingChatModel") OpenAiStreamingChatModel streamingChatModel,
             BusinessToolService businessToolService) {
         return AiServices.builder(StreamQueryAssistant.class)
                 .streamingChatModel(streamingChatModel)
@@ -133,10 +152,20 @@ public class AIAgent {
         TokenStream diagnose();
     }
 
+    /**
+     * 创建诊断助手 Bean。
+     * Spring 容器启动时创建 一次
+     * 整个应用运行期间只存在 一个实例
+     * 所有依赖它的地方都注入 同一个实例
+     * @param streamingChatModel 流式聊天模型实例
+     * @param businessToolService 业务工具服务实例
+     * @return DiagnosisAssistant 实例
+     */
     @Bean
     public DiagnosisAssistant diagnosisAssistant(
-            OpenAiStreamingChatModel streamingChatModel,
-            BusinessToolService businessToolService) {
+            @Qualifier("openAiStreamingChatModel") OpenAiStreamingChatModel streamingChatModel,
+            BusinessToolService businessToolService
+    ) {
         return AiServices.builder(DiagnosisAssistant.class)
                 .streamingChatModel(streamingChatModel)
                 .tools(businessToolService)
