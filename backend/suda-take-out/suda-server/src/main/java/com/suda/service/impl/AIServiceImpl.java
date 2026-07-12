@@ -29,11 +29,18 @@ public class AIServiceImpl implements AIService {
 
     // ==================== 自然语言查询 ====================
 
+    /**
+     * 处理用户自然语言查询请求，返回流式响应。
+     * @param request 包含用户问题的请求对象
+     * @param asyncContext 异步上下文，用于获取响应对象上下文
+     */
     @Override
     public void streamQuery(AIQueryRequest request, AsyncContext asyncContext) {
         log.info("AI流式查询 → {}", request.getQuestion());
 
+        // 从异步上下文获取响应对象
         HttpServletResponse response = (HttpServletResponse) asyncContext.getResponse();
+        // 配置 SSE 响应头
         setupSSE(response);
 
         try {
@@ -96,11 +103,14 @@ public class AIServiceImpl implements AIService {
         log.info("AI流式输出完成");
     }
 
+
+    /** 处理 SSE 输出错误 */
     private void fail(PrintWriter writer, AsyncContext ctx, Throwable error) {
         log.error("AI输出失败: {}", error.getMessage());
         writer.write("data:ERROR:" + error.getMessage() + "\n\n");
         writer.flush();
         writer.close();
         ctx.complete();
+
     }
 }

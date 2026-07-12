@@ -30,12 +30,13 @@ public class AdminAIController {
     /** 自然语言查询 → 流式 SSE */
     @PostMapping("/query/stream")
     @Operation(summary = "AI智能查询（流式输出）")
-    public void streamQuery(@RequestBody AIQueryRequest request,
-                            HttpServletRequest httpRequest,
-                            HttpServletResponse httpResponse) {
-        log.info(": {}", request.getQuestion());
-        httpRequest.startAsync().setTimeout(120_000L);
-        aiService.streamQuery(request, httpRequest.getAsyncContext());
+    public void streamQuery(@RequestBody AIQueryRequest request,// 用户的自然语言问题（必填）
+                            HttpServletRequest httpRequest, // 请求对象
+                            HttpServletResponse httpResponse // 响应对象
+    ) {
+        log.info("用户的问题: {}", request.getQuestion());
+        httpRequest.startAsync().setTimeout(120_000L);// 启动异步请求，设置超时时间为120秒
+        aiService.streamQuery(request, httpRequest.getAsyncContext());// 调用服务层方法，异步传入请求上下文，处理查询请求
     }
 
     /** 一键诊断 → AI 自动拉取多维度数据生成经营报告 */

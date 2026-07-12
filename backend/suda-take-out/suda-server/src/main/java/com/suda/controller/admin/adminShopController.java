@@ -42,8 +42,15 @@ public class adminShopController {
     @Operation(summary = "获取营业状态")
     public Result<Integer> getStatus() {
         log.info("获取到营业状态");
-        Integer status = (Integer) redisTemplate.opsForValue().get(KEY);
-        // Redis中无此key时返回null，默认为营业中
+        Integer status;
+        try {
+            status = (Integer) redisTemplate.opsForValue().get(KEY);
+        } catch (Exception e) {
+            log.warn("Redis读取营业状态失败（序列化格式不兼容），重置为营业中: {}", e.getMessage());
+            // Redis 中残留了旧版本的序列化数据，无法反序列化 → 删除并重置
+            try { redisTemplate.delete(KEY); } catch (Exception ignored) {}
+            status = 1;
+        }
         if (status == null) {
             status = 1;
         }
