@@ -65,18 +65,7 @@ suda:
         timeout: 60000
 
 # ===========================================
-# Spring AI — 用户端"小速"AI 点餐助手
-# ⚠️ base-url 不带 /v1（OpenAiApi 内部自动拼接）
-# ⚠️ 模型 deepseek-v4-flash（免费），不要用 deepseek-reasoner（付费）
+# AI 配置已全部迁移到 LangChain4j（suda.langchain4j.open-ai.*）
+# 只需配置 suda.langchain4j.open-ai 下的 api-key / base-url / model-name
+# Spring AI 依赖已移除
 # ===========================================
-spring:
-  ai:
-    openai:
-      api-key: 你的DeepSeek_API_Key
-      chat:
-        api-key: 你的DeepSeek_API_Key
-        base-url: https://api.deepseek.com
-        options:
-          model: deepseek-v4-flash
-          temperature: 0.7
-          max-tokens: 2000

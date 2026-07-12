@@ -6,6 +6,10 @@ spring:
     active: dev
   main:
     allow-circular-references: true
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration
+      - org.springframework.ai.autoconfigure.retry.SpringAiRetryAutoConfiguration
   servlet:
     multipart:
       max-file-size: 20MB
@@ -17,11 +21,19 @@ spring:
       url: jdbc:mysql://${suda.datasource.host}:${suda.datasource.port}/${suda.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: ${suda.datasource.username}
       password: ${suda.datasource.password}
-  redis:
-    host: 127.0.0.1
-    port: 6380
-    password: 123456
-    database: 1
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6380
+      password: 123456
+      database: 1
+      timeout: 5000ms
+      lettuce:
+        pool:
+          min-idle: 4
+          max-idle: 8
+          max-active: 16
+          max-wait: 3000ms
 
 # springdoc-openapi 配置
 springdoc:

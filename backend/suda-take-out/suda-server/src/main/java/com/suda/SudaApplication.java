@@ -7,10 +7,8 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication(exclude = {
-        org.springframework.ai.autoconfigure.openai.OpenAiAutoConfiguration.class,
-        org.springframework.ai.autoconfigure.retry.SpringAiRetryAutoConfiguration.class
-})
+
+@SpringBootApplication
 @EnableTransactionManagement //开启注解方式的事务管理
 @Slf4j//开启日志注解，log.info("server started") 打印日志
 @EnableCaching//开启缓存注解，@Cacheable("empCache") 缓存员工
