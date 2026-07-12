@@ -35,20 +35,27 @@ public class DishController {
     @GetMapping("/list")
     @Operation(summary = "根据分类id查询菜品")
     public Result<List<DishVO>> list(Long categoryId) {
-        //构造redis中的key，为dish_id
         String key = "dish_" + categoryId;
-        //查询redis中是否存在菜品数据
-        List<DishVO> list1= (List<DishVO>) redisTemplate.opsForValue().get(key);
-        //存在就直接访问
-        if (list1 != null && list1.size() > 0) {
-            return Result.success(list1);
+        try {
+            List<DishVO> list1 = (List<DishVO>) redisTemplate.opsForValue().get(key);
+            if (list1 != null && !list1.isEmpty()) {
+                return Result.success(list1);
+            }
+        } catch (Exception e) {
+            log.warn("Redis查询失败，降级走数据库: key={}", key, e);
         }
-        //不存在就查询数据库，将查询结果缓存到redis中
+
         Dish dish = new Dish();
         dish.setCategoryId(categoryId);
-        dish.setStatus(StatusConstant.ENABLE);//查询起售中的菜品
-        list1 = dishService.listWithFlavor(dish);
-        redisTemplate.opsForValue().set(key, list1);
+        dish.setStatus(StatusConstant.ENABLE);
+        List<DishVO> list1 = dishService.listWithFlavor(dish);
+
+        try {
+            redisTemplate.opsForValue().set(key, list1, 30, java.util.concurrent.TimeUnit.MINUTES);
+        } catch (Exception e) {
+            log.warn("Redis缓存写入失败: key={}", key, e);
+        }
+
         return Result.success(list1);
     }
 

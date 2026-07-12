@@ -223,3 +223,11 @@ export const cancelOrder = (id) => {
 		method: 'PUT'
 	})
 }
+
+/** 客户催单 */
+export const remindOrder = (id) => {
+	return request({
+		url: `/user/order/reminder/${id}`,
+		method: 'GET'
+	})
+}

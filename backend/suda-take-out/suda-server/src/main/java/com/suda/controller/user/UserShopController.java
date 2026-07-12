@@ -27,8 +27,12 @@ public class UserShopController{
     @Operation(summary = "获取营业状态")
     public Result<Integer> getStatus() {
         log.info("获取到营业状态");
-        Integer status = (Integer) redisTemplate.opsForValue().get(KEY);
-        // Redis中无此key时返回null，默认为营业中
+        Integer status = null;
+        try {
+            status = (Integer) redisTemplate.opsForValue().get(KEY);
+        } catch (Exception e) {
+            log.warn("Redis读取营业状态失败，使用默认值", e);
+        }
         if (status == null) {
             status = 1;
         }

@@ -161,7 +161,7 @@
 </template>
 
 <script>
-import { queryOrderDetailById, oneOrderAgain, cancelOrder, delShoppingCart } from '../api/api.js'
+import { queryOrderDetailById, oneOrderAgain, cancelOrder, delShoppingCart, remindOrder } from '../api/api.js'
 
 export default {
 	data() {
@@ -285,8 +285,17 @@ export default {
 			})
 		},
 		// 催单
-		remindOrder() {
-			uni.showToast({ title: '已催单，请耐心等待', icon: 'success', duration: 2000 })
+		async remindOrder() {
+			try {
+				const res = await remindOrder(this.order.id)
+				if (res.code === 1) {
+					uni.showToast({ title: '已催单，请耐心等待', icon: 'success', duration: 2000 })
+				} else {
+					uni.showToast({ title: '催单失败，请重试', icon: 'none' })
+				}
+			} catch (e) {
+				uni.showToast({ title: '网络异常，请重试', icon: 'none' })
+			}
 		},
 		// 去支付
 		goPay() {
