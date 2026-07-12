@@ -562,7 +562,7 @@ public class OrderServiceImpl implements OrderService {
             //不存在或者已经在配送中的
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
-        //存在
+        //发送WebSocket消息
         Map<String,Object> map=new HashMap<>();
         map.put("type",2);//1.标识来单提醒，2.表示客户催单
         map.put("orderId",id);

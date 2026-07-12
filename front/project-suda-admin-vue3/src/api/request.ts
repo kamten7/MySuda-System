@@ -53,7 +53,7 @@ service.interceptors.response.use(
           ElMessage.error('没有权限访问')
           break
         case 404:
-          ElMessage.error('请求的资源不存在')
+          // 404 不弹错误——由各页面自行处理空状态
           break
         case 500:
           ElMessage.error('服务器错误')

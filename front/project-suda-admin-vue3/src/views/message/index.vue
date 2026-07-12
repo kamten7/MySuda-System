@@ -163,8 +163,8 @@ function handleTabChange(value: number) {
   fetchMessages()
 }
 
-// ==================== Dev notice ====================
-const showDevNotice = ref(false)
+// ==================== Dev notice (API now working) ====================
+const showDevNotice = ref(false)  // 不再默认显示
 
 // ==================== Data ====================
 const loading = ref(false)
