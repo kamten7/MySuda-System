@@ -62,6 +62,26 @@ public class UserSession implements Serializable {
     private LocalDateTime lastActiveAt;
 
     /**
+     * 上一轮推荐的菜品列表（结构化存储，用于"需要"等确认意图时定位菜品）
+     * 每次 AI 调用 searchDishes / getRecommendations / getHotDishes 等推荐工具后更新
+     */
+    private List<RecommendedDish> lastRecommendedDishes;
+
+    /**
+     * 推荐菜品快照 — 记录 ID、名称、价格，供确认加购时精准定位
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RecommendedDish implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private Long dishId;
+        private Long setmealId;
+        private String name;
+        private Double price;
+    }
+
+    /**
      * 一轮对话记录
      */
     @Data
@@ -115,5 +135,95 @@ public class UserSession implements Serializable {
             return true;
         }
         return lastActiveAt.plusDays(expireDays).isBefore(LocalDateTime.now());
+    }
+
+    /**
+     * 更新上一轮推荐的菜品列表（供后续"需要"等确认意图精准定位）
+     */
+    public void updateRecommendedDishes(List<RecommendedDish> dishes) {
+        this.lastRecommendedDishes = dishes;
+    }
+
+    /**
+     * 构建推荐菜品的结构化提示文本，注入到用户消息上下文中
+     */
+    public String buildRecommendationContext() {
+        if (lastRecommendedDishes == null || lastRecommendedDishes.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder("\n## 上一轮推荐的菜品（结构化上下文）\n");
+        sb.append("用户说'需要''好的''加吧'等确认词时，你必须调用 addToCart 函数，传入以下菜品ID：\n");
+        for (RecommendedDish d : lastRecommendedDishes) {
+            if (d.getDishId() != null) {
+                sb.append(String.format("- 菜品ID=%d, 名称='%s', 价格=¥%.2f\n",
+                        d.getDishId(), d.getName(), d.getPrice()));
+            } else if (d.getSetmealId() != null) {
+                sb.append(String.format("- 套餐ID=%d, 名称='%s', 价格=¥%.2f\n",
+                        d.getSetmealId(), d.getName(), d.getPrice()));
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 从会话历史中反向查找最后一次包含 [ID:xxx] 标记的 AI 回复，解析出推荐菜品。
+     * 这是兜底加购的最可靠数据源——持久化在 Redis 中的历史对话不会被跨线程丢失。
+     *
+     * @return 解析出的推荐菜品列表，可能为空
+     */
+    public List<RecommendedDish> findLastRecommendedFromHistory() {
+        if (history == null || history.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // 从最新到最旧遍历历史记录
+        for (int i = history.size() - 1; i >= 0; i--) {
+            Exchange exchange = history.get(i);
+            if (exchange.getAssistantReply() == null) continue;
+
+            List<RecommendedDish> dishes =
+                    parseDishIdsFromText(exchange.getAssistantReply());
+            if (!dishes.isEmpty()) {
+                return dishes;
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * 从文本中解析 [ID:xxx] 格式的菜品信息（内联实现，避免跨模块依赖）。
+     */
+    private static List<RecommendedDish> parseDishIdsFromText(String text) {
+        List<RecommendedDish> dishes = new ArrayList<>();
+        if (text == null || text.isBlank()) return dishes;
+
+        java.util.regex.Pattern idPattern = java.util.regex.Pattern.compile("\\[ID:(\\d+)\\]");
+        java.util.regex.Pattern pricePattern = java.util.regex.Pattern.compile("¥(\\d+\\.?\\d*)");
+
+        for (String line : text.split("\n")) {
+            java.util.regex.Matcher m = idPattern.matcher(line);
+            if (!m.find()) continue;
+
+            Long dishId = Long.parseLong(m.group(1));
+            // 提取名称
+            String cleaned = line.replaceFirst("^[\\d]+\\.[\\s]*", "")
+                                .replaceFirst("^[-•][\\s]*", "");
+            int priceIdx = cleaned.indexOf('¥');
+            int dashIdx = cleaned.indexOf('—');
+            int bracketIdx = cleaned.indexOf('[');
+            int endIdx = cleaned.length();
+            if (priceIdx > 0) endIdx = Math.min(endIdx, priceIdx);
+            if (dashIdx > 0) endIdx = Math.min(endIdx, dashIdx);
+            if (bracketIdx > 0) endIdx = Math.min(endIdx, bracketIdx);
+            String name = cleaned.substring(0, endIdx).trim();
+            // 提取价格
+            Double price = null;
+            java.util.regex.Matcher pm = pricePattern.matcher(line);
+            if (pm.find()) {
+                try { price = Double.parseDouble(pm.group(1)); } catch (NumberFormatException ignored) {}
+            }
+            dishes.add(new RecommendedDish(dishId, null, name, price));
+        }
+        return dishes;
     }
 }

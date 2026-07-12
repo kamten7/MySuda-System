@@ -45,8 +45,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         ShoppingCart shoppingCart = new ShoppingCart();
         //先拷贝成shoppingCart对象
         BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
-        //设置用户id，通过用户端的拦截器取出来
-        Long userId =BaseContext.getCurrentId();
+        //设置用户id，通过用户端的拦截器取出来；若在 reactor 线程则为 null，改用 DTO 中携带的 userId
+        Long userId = BaseContext.getCurrentId();
+        if (userId == null) {
+            userId = shoppingCartDTO.getUserId();
+        }
+        if (userId == null) {
+            log.error("添加购物车失败：无法获取用户ID（BaseContext 和 DTO 中均为 null）");
+            throw new BaseException("用户未登录");
+        }
         shoppingCart.setUserId(userId);
         List<ShoppingCart> list = shoppingCartMapper.list(shoppingCart);
         //如果存在就修改数量，不存在就添加
