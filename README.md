@@ -227,8 +227,12 @@ mvn spring-boot:run
 ### 5️⃣ 启动管理端前端
 
 ```bash
-cd front/project-suda-admin-vue3
-npm install && npm run dev
+npm install  
+npm run dev
+
+cd project-suda-admin-vue3
+cd front
+
 ```
 
 浏览器访问 **http://localhost:8888**
